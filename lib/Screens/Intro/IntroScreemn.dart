@@ -84,7 +84,7 @@ class Intro extends StatelessWidget {
 
       _items = data.toList();
 
-
+      storage.write('gotContect', true);
       print('step 8 ');
       print('------------------conta-----------------> $_items');
 

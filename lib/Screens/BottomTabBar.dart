@@ -1,8 +1,9 @@
 import 'package:caller_app/Constent/Colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 
+
+import '../Bottom_bar/BottomBar.dart';
 import 'HomeScreen.dart';
 
 class BottomTabbar extends StatefulWidget {
@@ -21,7 +22,7 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
   @override
   void initState() {
     currentPage = 0;
-    tabController = TabController(length: 5, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
     tabController.animation!.addListener(
           () {
         final value = tabController.animation!.value.round();
@@ -66,15 +67,7 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
           ),
           fit: StackFit.expand,
           icon: (width, height) => Center(
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: (){},
-              icon: Icon(
-                Icons.arrow_upward_rounded,
-                color: black,
-                size: width,
-              ),
-            ),
+            child: Text('${storage.read('totalContacts')} Contacts'),
           ),
           borderRadius: BorderRadius.circular(500),
           duration: Duration(milliseconds: 200),
@@ -87,7 +80,7 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
           offset: 10,
           barAlignment: Alignment.bottomCenter,
           iconHeight: 35,
-          iconWidth: 35,
+          iconWidth: 100,
           reverse: false,
           hideOnScroll: true,
           scrollOpposite: true,
@@ -98,15 +91,16 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
               dragStartBehavior: DragStartBehavior.down,
               physics: const BouncingScrollPhysics(),
               children: [
-                HomeTab(controller: controller,),
-                HomeTab(controller: controller,),
-                HomeTab(),
-                HomeTab(),
-                HomeTab(),
+                Grid_Screen(controller: controller,),
+                Grid_Screen(controller: controller,),
+                Grid_Screen(),
+                Grid_Screen(),
               ]
 
           ),
-          child: TabBar(padding: EdgeInsets.symmetric(vertical: 5),
+          child: TabBar(
+            dividerHeight: 0,
+            padding: EdgeInsets.symmetric(vertical: 5),
             indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
             controller: tabController,splashFactory: NoSplash.splashFactory,
             splashBorderRadius: BorderRadius.circular(50),

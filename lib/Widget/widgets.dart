@@ -24,8 +24,11 @@ class Wid_Con {
   static textfield(
       {String? titelText,
         var suffixIcon,
+        var prefixIcon,
         var controller,
         bool? obscureText,
+        bool? filled,
+        Color? filledColor,
         double? paddingtop,
         double? contenthorizontal,
         double? contentvertical,
@@ -78,8 +81,9 @@ class Wid_Con {
                 labelText: labelText,
                 contentPadding:EdgeInsets.symmetric(horizontal: contenthorizontal??15,vertical: contentvertical??5),
                 suffixIcon: suffixIcon,
-                filled: true,
-                fillColor: fillColor,
+                prefixIcon: prefixIcon,
+                filled: filled??false,
+                fillColor: filledColor??grey,
                 hintText: hintText??'',
                 hintStyle: TextStyle(
                     color: grey,
@@ -88,15 +92,15 @@ class Wid_Con {
                     fontFamily: 'Medium'
                 ),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: themeColor,width: 2)),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(50),
                   borderSide: BorderSide( color: themeColor,width: 2),
                 ),
                 errorBorder: OutlineInputBorder(
                   gapPadding: 50,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(50),
                   borderSide: BorderSide( color: red,width: 1),
                 ),
                 errorText: errorText,
@@ -111,7 +115,7 @@ class Wid_Con {
                 ),
                 border: OutlineInputBorder(
 
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(50),
                 )),
           ),
         ),
