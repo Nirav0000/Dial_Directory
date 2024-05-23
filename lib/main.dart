@@ -14,7 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await Hive.initFlutter();
-  await Hive.openBox('shopping_box');
+  await Hive.openBox('GetContacts');
   runApp(
     GetMaterialApp(
 

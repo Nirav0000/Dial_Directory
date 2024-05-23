@@ -31,11 +31,12 @@ class _Grid_ScreenState extends State<Grid_Screen> {
   bool DBdata = false;
   var DATA;
   var size, height, width;
-  final _shoppingBox = Hive.box('shopping_box');
+  final _shoppingBox = Hive.box('GetContacts');
   List FevoritsItme = [];
   int clickCount = 0;
   List? uniquePersons;
   bool isFevorit = false;
+  int _selectedIndex = -1;
 
   @override
   void initState() {
@@ -152,7 +153,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
                     ),
                   ],
                 ),
-
+                homeController.isChangeGrid.value == false?
                 Expanded(
                   child: MediaQuery.removePadding(
                     context: context,
@@ -189,6 +190,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
                       //       child:
                             GridView.builder(
                                 controller: widget.controller,
+                              physics: BouncingScrollPhysics(),
                                 gridDelegate:
                                     SliverGridDelegateWithMaxCrossAxisExtent(
                                         maxCrossAxisExtent:
@@ -240,7 +242,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
                                                           image:  currentItem['image']!= null?DecorationImage(
                                                               image:MemoryImage(
                                                                   currentItem['image']),fit: BoxFit.cover):DecorationImage(
-                                    image:NetworkImage('https://static.vecteezy.com/system/resources/previews/030/504/836/large_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg'),fit: BoxFit.cover)),
+                                    image:AssetImage('assets/images/account1.png'),fit: BoxFit.fill)),
                                                     ),
                                                       ClipRRect(
                                                         borderRadius: BorderRadius.circular(100),
@@ -345,6 +347,175 @@ class _Grid_ScreenState extends State<Grid_Screen> {
                                 },
                               ),
                           // ),
+                    ),
+                  ),
+                ):Expanded(
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: _items.isEmpty
+                          ? Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(image: AssetImage('assets/images/contactEmpty.png'),height: 100,),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'No Contact Found',
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: grey),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      )
+                          :
+                      // CupertinoScrollbar(
+                      //   thickness: 5,
+                      //       thumbVisibility: false,
+                      //       child:
+                      ListView.builder(
+                        controller: widget.controller,
+                        itemCount: _items.length,
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (BuildContext context, int i) {
+                          _items.removeWhere((item) =>
+                          item['name'] == null && item['phone']);
+                          _items.sort((a, b) {
+                            String nameA = a['name'] ?? '';
+                            String nameB = b['name'] ?? '';
+
+                            // If either contact has no name, move it to the end
+                            if (nameA.isEmpty && nameB.isNotEmpty) {
+                              return 1;
+                            } else if (nameA.isNotEmpty &&
+                                nameB.isEmpty) {
+                              return -1;
+                            }
+
+                            // Otherwise, sort based on the names
+                            return nameA.compareTo(nameB);
+                          });
+                          final currentItem = _items[i];
+
+                          return GestureDetector(
+                            onTap: () async {
+                              setState(() {
+                                _selectedIndex = i;
+                              });
+                              // await dialer?.dial(currentItem['phone']);
+                            },
+                            child: Card(
+                              elevation: 0,
+                              child: Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  Container(
+                                    height: _selectedIndex == i ?100:80,
+                                    // color: grey,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              currentItem['image']!= null?
+                                              CircleAvatar(
+
+                                                radius: 25,
+                                                backgroundImage: MemoryImage(currentItem['image']),
+                                              ):CircleAvatar(
+                                              radius: 25,
+                                                                        backgroundImage: AssetImage('assets/images/account1.png'),
+                                                                        ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 10,),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      Text(
+                                                        currentItem['name'] ??
+                                                            '',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                            "Montserrat",
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w600),
+                                                      ),
+                                                      Text(
+                                                        currentItem['phone'] ??
+                                                            '',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                            "Montserrat",
+                                                            color: grey,
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w600),
+                                                      ),
+                                                      _selectedIndex == i?
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right: 10),
+                                                        child: Container(
+                                                          // color: grey,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              InkWell(
+                                                                  splashColor: transparent,
+                                                                  hoverColor: transparent,
+                                                                  onTap: () {
+                                                                    setState(() {
+                                                                      isFevorit =! isFevorit;
+                                                                    });
+                                                                  },
+                                                                  child: Image(image: AssetImage(isFevorit==true?'assets/images/Fevorit.png':'assets/images/fevorit_nonfill.png'),height: 25,)),
+                                                              Image(image: AssetImage('assets/images/call_icon.png'),height: 22,),
+                                                              Image(image: AssetImage('assets/images/message.png'),height: 22,),
+                                                              Image(image: AssetImage('assets/images/more.png'),height: 18,),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ):Container()
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      // ),
                     ),
                   ),
                 ),

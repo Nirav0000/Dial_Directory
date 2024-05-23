@@ -7,10 +7,13 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class Intro extends StatelessWidget {
+class Intro extends StatefulWidget {
+  @override
+  State<Intro> createState() => _IntroState();
+}
+
+class _IntroState extends State<Intro> {
   // const Intro({super.key});
-
-
   final List<SingleIntroScreen> pages = [
     const SingleIntroScreen(
       title: 'Welcome to the Event Management App !',
@@ -30,12 +33,15 @@ class Intro extends StatelessWidget {
     ),
   ];
 
-  final _shoppingBox = Hive.box('shopping_box');
-  List<Map<String, dynamic>> _items = [];
-  List<Contact>? _contacts;
-  bool? isload;
-  bool? istrue;
+  final _shoppingBox = Hive.box('GetContacts');
 
+  List<Map<String, dynamic>> _items = [];
+
+  List<Contact>? _contacts;
+
+  bool isload = false;
+
+  bool? istrue;
 
   requestStoragePermission() async {
 
@@ -44,7 +50,9 @@ class Intro extends StatelessWidget {
     print('step 1 ');
     if (Status1.isGranted && status.isGranted) {
 
-
+      setState(() {
+        isload = true;
+      });
       print('step 2 ');
       _contacts = await FlutterContacts.getContacts(
           withThumbnail: true,
@@ -110,13 +118,14 @@ class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedIntroduction(
-        doneWidget: Text('Done',style: TextStyle(
-          fontSize: 18,color: Colors.white,
+        doneWidget: isload == false?Text('Done',style: TextStyle(
+          fontSize: 18,color: black,
           fontWeight: FontWeight.bold
-        ),),
+        ),):CircularProgressIndicator(color: black,),
         footerBgColor: themeColor,
         containerBg: Color(0xFFF7D7DA),
         indicatorType: IndicatorType.line,
+          textColor: black,
           slides: pages,
 
           onDone: (){
