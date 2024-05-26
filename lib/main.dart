@@ -18,7 +18,7 @@ Future<void> main() async {
   runApp(
     GetMaterialApp(
 
-      home: storage.read('gotContect')==true? BottomTabbar():Intro(),
+      home: storage.read('gotContact')==true? BottomTabbar():Intro(),
       debugShowCheckedModeBanner: false,
     )
   );

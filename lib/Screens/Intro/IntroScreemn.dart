@@ -92,7 +92,7 @@ class _IntroState extends State<Intro> {
 
       _items = data.toList();
 
-      storage.write('gotContect', true);
+      storage.write('gotContact', true);
       print('step 8 ');
       print('------------------conta-----------------> $_items');
 

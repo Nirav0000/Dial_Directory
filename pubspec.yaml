@@ -44,6 +44,8 @@ dependencies:
   permission_handler: ^9.2.0
   flutter_contacts: ^1.1.7
   get_storage: ^2.1.1
+  direct_dialer: ^1.2.0
+  url_launcher: ^6.2.6
 
 dev_dependencies:
   flutter_test:

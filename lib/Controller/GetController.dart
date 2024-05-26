@@ -7,4 +7,14 @@ class MyController extends GetCupertinoApp {
   changeView(){
     isChangeGrid.value =! isChangeGrid.value;
   }
+
+
+  // Favorite Screen
+
+  Rx<bool> isChangeGrid_Fav = false.obs;
+
+  changeView_Fav(){
+    isChangeGrid.value =! isChangeGrid.value;
+  }
+
 }

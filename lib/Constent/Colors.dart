@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 final storage = GetStorage();
 
 
+Color themeDarkColor = const Color(0xFF878ECD);
 Color themeColor = const Color(0xFFDFF4F3);
 Color black = const Color(0xFF000000);
 Color white = const Color(0xFFFFFFFF);
