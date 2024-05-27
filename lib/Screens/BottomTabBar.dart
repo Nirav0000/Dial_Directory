@@ -1,31 +1,40 @@
 import 'package:caller_app/Constent/Colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../Bottom_bar/BottomBar.dart';
 import 'FavoriteScreen.dart';
 import 'HomeScreen.dart';
 
 class BottomTabbar extends StatefulWidget {
-  BottomTabbar({Key? key,}) : super(key: key);
-
+  BottomTabbar({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _BottomTabbarState createState() => _BottomTabbarState();
 }
 
-class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderStateMixin {
+class _BottomTabbarState extends State<BottomTabbar>
+    with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
-  final List<Color> colors = [Colors.yellow, Colors.red, Colors.green, Colors.blue, Colors.pink];
+  final List<Color> colors = [
+    Colors.yellow,
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+    Colors.pink
+  ];
 
   @override
   void initState() {
     currentPage = 0;
     tabController = TabController(length: 4, vsync: this);
     tabController.animation!.addListener(
-          () {
+      () {
         final value = tabController.animation!.value.round();
         if (value != currentPage && mounted) {
           changePage(value);
@@ -47,30 +56,76 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    final Color unselectedColor = colors[currentPage].computeLuminance() < 0.5 ? Colors.black : Colors.white;
+    final Color unselectedColor = colors[currentPage].computeLuminance() < 0.5
+        ? Colors.black
+        : Colors.white;
     return SafeArea(
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 60),
+          child: FloatingActionButton(
+            child: Image(
+              image: AssetImage('assets/images/keyPadFilled.png'),
+              height: 25,
+            ),
+            backgroundColor: themeDarkColor,
+            onPressed: () {
+              Get.bottomSheet(
+                Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 5,
+                          width: 50,
+                          margin: EdgeInsets.only(top: 8),
+                          decoration: BoxDecoration(
+                              color: grey.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(50)),
+                        ),
+                        Container(
+                          height: 70,
+                          margin: EdgeInsets.only(top: 8),
+                          decoration: BoxDecoration(
+                            color: grey.withOpacity(0.2),
+                            // borderRadius: BorderRadius.circular(50)
+                          ),
+                        )
+
+                      ],
+                    )),
+              );
+            },
+          ),
+        ),
         body: BottomBar(
           barDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                spreadRadius: 1,
-                blurRadius: 5,
-                color: grey.withOpacity(0.5),
-                // offset: Offset(0, 5),
-              )
-            ]
-          ),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  color: grey.withOpacity(0.5),
+                  // offset: Offset(0, 5),
+                )
+              ]),
           fit: StackFit.passthrough,
           icon: (width, height) => Center(
             child: Text('${storage.read('totalContacts')} Contacts'),
           ),
-          borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
           duration: Duration(milliseconds: 200),
           curve: Curves.decelerate,
           showIcon: true,
@@ -93,33 +148,35 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
               dragStartBehavior: DragStartBehavior.down,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                Grid_Screen(controller: controller,),
-                FavoriteScreen(controller: controller,),
+                Grid_Screen(
+                  controller: controller,
+                ),
+                FavoriteScreen(
+                  controller: controller,
+                ),
                 Test(),
                 Test(),
-              ]
-
-          ),
+              ]),
           child: TabBar(
-
             dividerHeight: 0,
-           automaticIndicatorColorAdjustment: true,
+            automaticIndicatorColorAdjustment: true,
             padding: EdgeInsets.symmetric(vertical: 5),
             indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
             controller: tabController,
             splashFactory: NoSplash.splashFactory,
             splashBorderRadius: BorderRadius.circular(10),
-            indicator: UnderlineTabIndicator(borderRadius: BorderRadius.circular(10),
+            indicator: UnderlineTabIndicator(
+                borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(
                     color: currentPage == 0
                         ? themeDarkColor
                         : currentPage == 1
-                        ? themeDarkColor
-                        : currentPage == 2
-                        ? themeDarkColor
-                        : currentPage == 3
-                        ? themeDarkColor
-                        :unselectedColor,
+                            ? themeDarkColor
+                            : currentPage == 2
+                                ? themeDarkColor
+                                : currentPage == 3
+                                    ? themeDarkColor
+                                    : unselectedColor,
                     width: 4),
                 insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
             tabs: [
@@ -127,33 +184,53 @@ class _BottomTabbarState extends State<BottomTabbar> with SingleTickerProviderSt
                 height: 55,
                 width: 40,
                 child: Center(
-                    child: Image(image: AssetImage(currentPage == 0?'assets/images/HomeManuFill.png':'assets/images/HomeManu.png'),height: 25,)),
+                    child: Image(
+                  image: AssetImage(currentPage == 0
+                      ? 'assets/images/HomeManuFill.png'
+                      : 'assets/images/HomeManu.png'),
+                  height: 25,
+                )),
               ),
               SizedBox(
                 height: 55,
                 width: 40,
                 child: Center(
-                    child: Image(image: AssetImage(currentPage == 1?'assets/images/FavoritFillManu.png':'assets/images/FavoritManu.png'),height: 30,)),
+                    child: Image(
+                  image: AssetImage(currentPage == 1
+                      ? 'assets/images/FavoritFillManu.png'
+                      : 'assets/images/FavoritManu.png'),
+                  height: 30,
+                )),
               ),
               SizedBox(
                 height: 55,
                 width: 40,
                 child: Center(
-                    child: Image(image: AssetImage(currentPage == 2?'assets/images/keyPadFilled.png':'assets/images/keyPad.png'),height: 25,)),
+                    child: Image(
+                  image: AssetImage(currentPage == 2
+                      ? 'assets/images/keyPadFilled.png'
+                      : 'assets/images/keyPad.png'),
+                  height: 25,
+                )),
               ),
               SizedBox(
                 height: 55,
                 width: 40,
                 child: Center(
-                    child: Image(image: AssetImage(currentPage == 3?'assets/images/SettingFillManu.png':'assets/images/SettingManu.png'),height: 30,)),
+                    child: Image(
+                  image: AssetImage(currentPage == 3
+                      ? 'assets/images/SettingFillManu.png'
+                      : 'assets/images/SettingManu.png'),
+                  height: 30,
+                )),
               ),
-
             ],
-          ),),),);
+          ),
+        ),
+      ),
+    );
   }
 }
-
-
 
 class Test extends StatelessWidget {
   const Test({super.key});

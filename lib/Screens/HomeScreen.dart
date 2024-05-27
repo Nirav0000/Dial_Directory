@@ -84,7 +84,11 @@ class _Grid_ScreenState extends State<Grid_Screen> {
     setState(() {
       _items = data.toList();
       _items.forEach((e) {
-
+setState(() {
+  if(e['name']==''||e['phone']==''){
+    _deleteItem(e['key']);
+  }
+});
         print('------name-----> ${e['name']}');
         print('------phone--------> ${e['phone']}');
       });
@@ -425,7 +429,7 @@ BoxShadow(
                                                                   hoverColor: transparent,
                                                                   onTap: () {
                                                                     setState(() {
-                                                                      // _deleteItem(currentItem['key']);
+                                                                      _deleteItem(currentItem['key']);
                                                                     });
 
                                                                   },
