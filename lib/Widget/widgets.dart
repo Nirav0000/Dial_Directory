@@ -69,14 +69,14 @@ class Wid_Con {
             validator: validator,
             obscureText: obscureText??false,
 
-            style: TextStyle(fontWeight: FontWeight.w500,color: black),
+            style: TextStyle(fontWeight: FontWeight.w500,color: themeDarkColor),
             key: key,
             inputFormatters: inputFormatters,
             maxLines:maxLines??1,
             keyboardType: keyboardType??TextInputType.text,
             controller: controller,
             onChanged: onChanged,
-            cursorColor: themeColor,
+            cursorColor: themeDarkColor,
             decoration: InputDecoration(
                 labelText: labelText,
                 contentPadding:EdgeInsets.symmetric(horizontal: contenthorizontal??15,vertical: contentvertical??5),
@@ -93,10 +93,10 @@ class Wid_Con {
                 ),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: themeColor,width: 2)),
+                    borderSide: BorderSide(color: themeDarkColor,width: 1)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
-                  borderSide: BorderSide( color: themeColor,width: 2),
+                  borderSide: BorderSide( color: white,width: 1),
                 ),
                 errorBorder: OutlineInputBorder(
                   gapPadding: 50,
@@ -114,7 +114,7 @@ class Wid_Con {
                     fontFamily: 'Medium'
                 ),
                 border: OutlineInputBorder(
-
+borderSide: borderSide??BorderSide.none,
                   borderRadius: BorderRadius.circular(50),
                 )),
           ),
@@ -220,6 +220,48 @@ class Wid_Con {
       fontFamily: fontFamily??'Medium'
     );
 }
+
+  static keyPadButton({String? ButtonName,
+    Color? titelcolor,
+    Color? Bordercolor,
+    required VoidCallback onPressed,
+     VoidCallback? onLongPress,
+    double? ButtonRadius,
+    double? fontSize,
+    Color? ButtonColor,
+    double? width,
+    double? height,
+    var child,
+    double? elevation,
+    double? borderWidth
+  }) {
+    return ElevatedButton(
+      style: ButtonStyle(
+          overlayColor: MaterialStateProperty.all<Color?>(Colors.grey.withOpacity(0.1)),
+          elevation: MaterialStateProperty.all<double?>(elevation??0),
+          minimumSize:
+          MaterialStateProperty.all<Size?>( Size(width??100,height?? 100)),
+          // fixedSize: ,
+
+          backgroundColor: MaterialStateProperty.all<Color?>(ButtonColor??white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ButtonRadius??10.0),
+              ))),
+      onLongPress: onLongPress??() {},
+      onPressed: onPressed,
+      child:child ?? Text(
+        ButtonName??'',
+        style: TextStyle(
+            color:titelcolor?? themeDarkColor,
+            fontSize:fontSize??20,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Light'
+        ),
+      ),
+    );
+  }
+
 
   static NavigationTo(var NavigatClass){
     return Get.to(NavigatClass,

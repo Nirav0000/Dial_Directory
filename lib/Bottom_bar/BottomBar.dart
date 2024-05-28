@@ -284,78 +284,81 @@ class _BottomBarState extends State<BottomBar>
                 duration: widget.duration,
                 curve: widget.curve,
                 opacity: isOnTop == true ? 0 : 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: BackdropFilter(
-                    filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                    child: AnimatedContainer(
-                      duration: widget.duration,
-                      curve: widget.curve,
-                      width: isOnTop == true ? 0 : widget.iconWidth,
-                      height: isOnTop == true ? 0 : widget.iconHeight,
-                      decoration: widget.iconDecoration ??
-                          BoxDecoration(
-                            border: Border.all(color: white),
-                        color: Colors.black.withOpacity(0.1),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     spreadRadius: 1,
-                            //     blurRadius: 5,
-                            //     color: grey,
-                            //     offset: Offset(0, 5),
-                            //   )
-                            // ],
-                            borderRadius: BorderRadius.circular(10),
-                            // color: themeColor,
-                          ),
-                      padding: EdgeInsets.zero,
-                      margin: EdgeInsets.zero,
-                      child: ClipOval(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              scrollBottomBarController
-                                  .animateTo(
-                                (!widget.scrollOpposite)
-                                    ? scrollBottomBarController
-                                        .position.minScrollExtent
-                                    : scrollBottomBarController
-                                        .position.maxScrollExtent,
-                                duration: widget.duration,
-                                curve: widget.curve,
-                              )
-                                  .then((value) {
-                                if (mounted) {
-                                  setState(() {
-                                    isOnTop = true;
-                                    isScrollingDown = false;
-                                  });
-                                }
-                                showBottomBar();
-                              });
-                            },
-                            child: () {
-                              if (widget.icon != null) {
-                                return widget.icon!(
-                                    isOnTop == true ? 0 : widget.iconWidth / 2,
-                                    isOnTop == true ? 0 : widget.iconHeight / 2);
-                              } else {
-                                return Center(
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: null,
-                                    icon: Icon(
-                                      Icons.arrow_upward_rounded,
-                                      color: Colors.white,
-                                      size: isOnTop == true
-                                          ? 0
-                                          : widget.iconWidth / 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: BackdropFilter(
+                      filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                      child: AnimatedContainer(
+                        duration: widget.duration,
+                        curve: widget.curve,
+                        width: isOnTop == true ? 0 : widget.iconWidth,
+                        height: isOnTop == true ? 0 : widget.iconHeight,
+                        decoration: widget.iconDecoration ??
+                            BoxDecoration(
+                              border: Border.all(color: white),
+                              color: white.withOpacity(0.5),
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     spreadRadius: 1,
+                              //     blurRadius: 5,
+                              //     color: grey,
+                              //     offset: Offset(0, 5),
+                              //   )
+                              // ],
+                              borderRadius: BorderRadius.circular(10),
+                              // color: themeColor,
+                            ),
+                        padding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        child: ClipOval(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                scrollBottomBarController
+                                    .animateTo(
+                                  (!widget.scrollOpposite)
+                                      ? scrollBottomBarController
+                                          .position.minScrollExtent
+                                      : scrollBottomBarController
+                                          .position.maxScrollExtent,
+                                  duration: widget.duration,
+                                  curve: widget.curve,
+                                )
+                                    .then((value) {
+                                  if (mounted) {
+                                    setState(() {
+                                      isOnTop = true;
+                                      isScrollingDown = false;
+                                    });
+                                  }
+                                  showBottomBar();
+                                });
+                              },
+                              child: () {
+                                if (widget.icon != null) {
+                                  return widget.icon!(
+                                      isOnTop == true ? 0 : widget.iconWidth / 2,
+                                      isOnTop == true ? 0 : widget.iconHeight / 2);
+                                } else {
+                                  return Center(
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: null,
+                                      icon: Icon(
+                                        Icons.arrow_upward_rounded,
+                                        color: Colors.white,
+                                        size: isOnTop == true
+                                            ? 0
+                                            : widget.iconWidth / 2,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
-                            }(),
+                                  );
+                                }
+                              }(),
+                            ),
                           ),
                         ),
                       ),

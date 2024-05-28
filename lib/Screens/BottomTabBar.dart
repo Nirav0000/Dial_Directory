@@ -1,4 +1,5 @@
 import 'package:caller_app/Constent/Colors.dart';
+import 'package:direct_dialer/direct_dialer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../Bottom_bar/BottomBar.dart';
 import 'FavoriteScreen.dart';
 import 'HomeScreen.dart';
+import 'KeypadSheet.dart';
 
 class BottomTabbar extends StatefulWidget {
   BottomTabbar({
@@ -28,11 +30,12 @@ class _BottomTabbarState extends State<BottomTabbar>
     Colors.blue,
     Colors.pink
   ];
-
+  DirectDialer? dialer;
+  Future<void> setupDialer() async => dialer = await DirectDialer.instance;
   @override
   void initState() {
     currentPage = 0;
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     tabController.animation!.addListener(
       () {
         final value = tabController.animation!.value.round();
@@ -65,46 +68,23 @@ class _BottomTabbarState extends State<BottomTabbar>
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 60),
+          padding: const EdgeInsets.only(bottom: 70),
           child: FloatingActionButton(
             child: Image(
               image: AssetImage('assets/images/keyPadFilled.png'),
               height: 25,
             ),
-            backgroundColor: themeDarkColor,
+            backgroundColor: bottomBG,
             onPressed: () {
-              Get.bottomSheet(
-                Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 30,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 5,
-                          width: 50,
-                          margin: EdgeInsets.only(top: 8),
-                          decoration: BoxDecoration(
-                              color: grey.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(50)),
-                        ),
-                        Container(
-                          height: 70,
-                          margin: EdgeInsets.only(top: 8),
-                          decoration: BoxDecoration(
-                            color: grey.withOpacity(0.2),
-                            // borderRadius: BorderRadius.circular(50)
-                          ),
-                        )
-
-                      ],
-                    )),
+              showModalBottomSheet(
+                  context: context,
+                  constraints: BoxConstraints.loose(Size(
+                      MediaQuery.of(context).size.width,
+                      580)),
+                  isScrollControlled: true,
+                  builder: (BuildContext context) {
+                    return  KeyPadSheet(dialer: dialer,);
+                 }
               );
             },
           ),
@@ -131,7 +111,7 @@ class _BottomTabbarState extends State<BottomTabbar>
           showIcon: true,
           width: double.infinity,
           // width: MediaQuery.of(context).size.width * 1,
-          barColor: Color(0xFF878ECD),
+          barColor: bottomBG,
           start: 2,
           end: 0,
           offset: 0,
@@ -155,7 +135,6 @@ class _BottomTabbarState extends State<BottomTabbar>
                   controller: controller,
                 ),
                 Test(),
-                Test(),
               ]),
           child: TabBar(
             dividerHeight: 0,
@@ -169,13 +148,13 @@ class _BottomTabbarState extends State<BottomTabbar>
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(
                     color: currentPage == 0
-                        ? themeDarkColor
+                        ? white
                         : currentPage == 1
-                            ? themeDarkColor
+                            ? white
                             : currentPage == 2
-                                ? themeDarkColor
+                                ? white
                                 : currentPage == 3
-                                    ? themeDarkColor
+                                    ? white
                                     : unselectedColor,
                     width: 4),
                 insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
@@ -207,18 +186,8 @@ class _BottomTabbarState extends State<BottomTabbar>
                 width: 40,
                 child: Center(
                     child: Image(
-                  image: AssetImage(currentPage == 2
-                      ? 'assets/images/keyPadFilled.png'
-                      : 'assets/images/keyPad.png'),
-                  height: 25,
-                )),
-              ),
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                    child: Image(
-                  image: AssetImage(currentPage == 3
+                  image: AssetImage(
+                      currentPage == 3
                       ? 'assets/images/SettingFillManu.png'
                       : 'assets/images/SettingManu.png'),
                   height: 30,

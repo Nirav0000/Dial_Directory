@@ -61,7 +61,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           height: 45,
                           width: 45,
                           decoration: BoxDecoration(
-                              color: white,
+                              color: white.withOpacity(0.5),
+                              border: Border.all(color: white),
                               borderRadius: BorderRadius.circular(50)),
                           child: Obx(
                                 () => Center(
@@ -89,8 +90,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               return null;
                             },
                             filled: true,
-                            filledColor: white,
+                            filledColor: white.withOpacity(0.5),
                             hintText: "Search",
+                            borderSide: BorderSide(color: white),
+
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(15),
                               child: Image.asset(

@@ -122,11 +122,6 @@ setState(() {
   Future<void> _deleteItem(int itemKey) async {
     await _shoppingBox.delete(itemKey);
     _refreshItems(); // update the UI
-
-    // Display a snackbar
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Contact delete successfully')));
   }
 
   @override
@@ -158,12 +153,13 @@ setState(() {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 18, left: 8, right: 8, bottom: 8),
+                          top: 18, right: 8, bottom: 8),
                       child: Container(
                         height: 45,
                         width: 45,
                         decoration: BoxDecoration(
-                            color: white,
+                            color: white.withOpacity(0.5),
+                            border: Border.all(color: white),
                             borderRadius: BorderRadius.circular(50)),
                         child: Obx(
                           () => Center(
@@ -191,8 +187,10 @@ setState(() {
                             return null;
                           },
                           filled: true,
-                          filledColor: white,
+                          filledColor: white.withOpacity(0.5),
                           hintText: "Search",
+                          borderSide: BorderSide(color: white),
+
                           prefixIcon: Padding(
                             padding: const EdgeInsets.all(15),
                             child: Image.asset(
@@ -277,15 +275,16 @@ setState(() {
                                       },
                                       child: Container(
                                        decoration: BoxDecoration(
-                                         color: white,
+                                         color: white.withOpacity(0.5),
                                          borderRadius: BorderRadius.circular(10),
+                                         border: Border.all(color: white),
                                          boxShadow: [
-BoxShadow(
-  color: Colors.grey.shade300,
-  offset: Offset(1, 1),
-  spreadRadius: 1,
-  blurRadius: 10
-)
+// BoxShadow(
+//   color: Colors.grey.shade300,
+//   offset: Offset(1, 1),
+//   spreadRadius: 1,
+//   blurRadius: 10
+// )
                                          ]
                                        ),
                                         child: Stack(
@@ -519,16 +518,10 @@ BoxShadow(
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
-                                    color: white,
+                                    color: white.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.grey.shade200,
-                                          offset: Offset(1, 1),
-                                          spreadRadius: 1,
-                                          blurRadius: 10
-                                      )
-                                    ]
+                                    border: Border.all(color: white),
+
                                 ),
                                 child: Stack(
                                   alignment: Alignment.topCenter,

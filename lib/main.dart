@@ -1,3 +1,4 @@
+import 'package:caller_app/Screens/Intro/IntroScreen2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ Future<void> main() async {
   runApp(
     GetMaterialApp(
 
-      home: storage.read('gotContact')==true? BottomTabbar():Intro(),
+      home: storage.read('gotContact')==true? BottomTabbar():Intro2(),
       debugShowCheckedModeBanner: false,
     )
   );
