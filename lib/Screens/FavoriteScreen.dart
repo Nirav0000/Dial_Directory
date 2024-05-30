@@ -310,7 +310,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                                 });
 
                                                               },
-                                                              child: Image(image: AssetImage('assets/images/more.png'),height: 18,)),
+                                                              child: Image(image: AssetImage('assets/images/moe.png'),height: 18,)),
                                                         ],
                                                       ),
                                                     ),
