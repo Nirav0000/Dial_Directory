@@ -6,7 +6,6 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../../Constent/Colors.dart';
 import '../../Widget/widgets.dart';
 import '../BottomTabBar.dart';

@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../Constent/Colors.dart';
 import '../Controller/GetController.dart';
 import '../Widget/widgets.dart';
+import 'MoreInfo.dart';
 
 class Grid_Screen extends StatefulWidget {
   Grid_Screen({
@@ -216,8 +217,8 @@ setState(() {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image(image: AssetImage('assets/images/contactEmpty.png'),height: 100,),
-                                      SizedBox(
+                                      const Image(image: AssetImage('assets/images/contactEmpty.png'),height: 100,),
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
@@ -240,9 +241,9 @@ setState(() {
                         //       child:
                               GridView.builder(
                                   controller: widget.controller,
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                   gridDelegate:
-                                      SliverGridDelegateWithMaxCrossAxisExtent(
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
                                           maxCrossAxisExtent:
                                               /*provider.isDark ? 150 :*/ 200,
                                           crossAxisSpacing: 15,
@@ -298,13 +299,13 @@ setState(() {
                                                        alignment: Alignment.bottomCenter,
                                                       children: [
                                                         Container(
-                                                        margin: EdgeInsets.only(left: 8,right:8,top: 8,bottom: 25),
+                                                        margin: const EdgeInsets.only(left: 8,right:8,top: 8,bottom: 25),
                                                         decoration: BoxDecoration(
                                                           color: Colors.grey.shade100,
                                                             borderRadius: BorderRadius.circular(10),
                                                             image:  currentItem['image']!= null?DecorationImage(
                                                                 image:MemoryImage(
-                                                                    currentItem['image']),fit: BoxFit.cover):DecorationImage(
+                                                                    currentItem['image']),fit: BoxFit.cover):const DecorationImage(
 
                                       image:AssetImage('assets/images/EmptyImage.png'),fit: BoxFit.cover)),
                                                       ),
@@ -412,7 +413,7 @@ setState(() {
                                                                 onTap: () async {
                                                                   await dialer?.dial(currentItem['phone']);
                                                                 },
-                                                                  child: Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
+                                                                  child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
                                                               InkWell(
                                                                 splashColor: transparent,
                                                                 hoverColor: transparent,
@@ -422,17 +423,26 @@ setState(() {
                                                                   }
 
                                                                 },
-                                                                  child: Image(image: AssetImage('assets/images/message.png'),height: 23,)),
+                                                                  child: const Image(image: AssetImage('assets/images/message.png'),height: 23,)),
                                                               InkWell(
                                                                   splashColor: transparent,
                                                                   hoverColor: transparent,
                                                                   onTap: () {
                                                                     setState(() {
-                                                                      _deleteItem(currentItem['key']);
+                                                                      // _deleteItem(currentItem['key']);
+                                                                      Wid_Con.NavigationTo( MoreInfo(
+                                                                        image: currentItem['image'],
+                                                                        name: currentItem['name'],
+                                                                        phone: currentItem['phone'],
+                                                                      ));
                                                                     });
 
                                                                   },
-                                                                  child: Image(image: AssetImage('assets/images/more.png'),height: 18,)),
+                                                                  child: Container(
+                                                                    height: 18,
+                                                                      width: 15,
+                                                                      // color: grey,
+                                                                      child: const Image(image: AssetImage('assets/images/more.png'),))),
                                                               ],
                                                             ),
                                                           ),
@@ -462,8 +472,8 @@ setState(() {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image(image: AssetImage('assets/images/contactEmpty.png'),height: 100,),
-                                SizedBox(
+                                const Image(image: AssetImage('assets/images/contactEmpty.png'),height: 100,),
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
@@ -487,7 +497,7 @@ setState(() {
                         ListView.builder(
                           controller: widget.controller,
                           itemCount: _items.length,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemBuilder: (BuildContext context, int i) {
                             _items.removeWhere((item) =>
                             item['name'] == null && item['phone']);
@@ -516,7 +526,7 @@ setState(() {
                                 // await dialer?.dial(currentItem['phone']);
                               },
                               child: Container(
-                                margin: EdgeInsets.only(bottom: 10),
+                                margin: const EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
                                     color: white.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(10),
@@ -527,7 +537,7 @@ setState(() {
                                   alignment: Alignment.topCenter,
                                   children: [
                                     AnimatedContainer(
-                                      duration: Duration(milliseconds: 500),
+                                      duration: const Duration(milliseconds: 500),
                                       curve: Curves.fastOutSlowIn,
                                       height: _selectedIndex == i ?100:70,
                                       // color: grey,
@@ -544,7 +554,7 @@ setState(() {
 
                                                   radius: 25,
                                                   backgroundImage: MemoryImage(currentItem['image']),
-                                                ):CircleAvatar(
+                                                ):const CircleAvatar(
                                                 radius: 25,
                                                                           backgroundImage: AssetImage('assets/images/EmptyImage.png'),
                                                                           ),
@@ -620,7 +630,7 @@ setState(() {
                                                                     onTap: () async {
                                                                       await dialer?.dial(currentItem['phone']);
                                                                     },
-                                                                    child: Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
+                                                                    child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
                                                                 InkWell(
                                                                     splashColor: transparent,
                                                                     hoverColor: transparent,
@@ -630,17 +640,25 @@ setState(() {
                                                                       }
 
                                                                     },
-                                                                    child: Image(image: AssetImage('assets/images/message.png'),height: 23,)),
+                                                                    child: const Image(image: AssetImage('assets/images/message.png'),height: 23,)),
                                                                 InkWell(
                                                                     splashColor: transparent,
                                                                     hoverColor: transparent,
                                                                     onTap: () {
                                                                       setState(() {
                                                                         // _deleteItem(currentItem['key']);
+                                                                        Wid_Con.NavigationTo( MoreInfo(
+                                                                          image: currentItem['image'],
+                                                                          name: currentItem['name'],
+                                                                          phone: currentItem['phone'],
+                                                                        ));
                                                                       });
 
                                                                     },
-                                                                    child: Image(image: AssetImage('assets/images/more.png'),height: 18,)),
+                                                                    child: Container(
+                                                                        height: 18,
+                                                                        width: 15,
+                                                                        child: const Image(image: AssetImage('assets/images/more.png'),))),
                                                               ],
                                                             ),
                                                           ),
