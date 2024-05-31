@@ -43,6 +43,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
   bool isFevorit = false;
   int _selectedIndex = -1;
   DirectDialer? dialer;
+  List _filteredContacts = [];
 
   @override
   void initState() {
@@ -84,6 +85,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
 
     setState(() {
       _items = data.toList();
+      _filteredContacts = _items;
       _items.forEach((e) {
 setState(() {
   if(e['name']==''||e['phone']==''){
@@ -113,7 +115,7 @@ setState(() {
     final value = storage.read('FevContacts');
     final list = value.split(',').toList();
     final selectedList =
-    _items.where((item) => list.contains(item['phone'])).toList();
+    _filteredContacts.where((item) => list.contains(item['phone'])).toList();
     log('------------------>$selectedList');
     setState(() {
       FevoritsItme = selectedList ?? [];
@@ -123,6 +125,44 @@ setState(() {
   Future<void> _deleteItem(int itemKey) async {
     await _shoppingBox.delete(itemKey);
     _refreshItems(); // update the UI
+  }
+
+  void _filterContacts(String text) {
+    if (text.isEmpty) {
+      setState(() {
+        _filteredContacts = _items;
+      });
+    } else {
+      setState(() {
+        _filteredContacts = _items
+        // .where((contact) =>
+        //     contact['name'].toLowerCase().contains(text.toLowerCase()))
+        // .toList();
+            .where((contact) =>
+        contact['name'] != null &&
+            contact['name'].toLowerCase().contains(text))
+            .toList();
+      });
+    }
+  }
+
+  List selectItems = [];
+  bool isMultiSelectionEnabled = false;
+  void doMultiSelection(var path) {
+    if (isMultiSelectionEnabled) {
+      setState(() {
+        if (selectItems.contains(path)) {
+          selectItems.remove(path);
+        } else {
+          selectItems.add(path);
+        }
+        if(selectItems.isEmpty){
+          isMultiSelectionEnabled = false;
+        }
+      });
+    } else {
+      //
+    }
   }
 
   @override
@@ -144,7 +184,7 @@ setState(() {
         body: Stack(
             children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10,top: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -180,10 +220,13 @@ setState(() {
                       ),
                     ),
                     Expanded(
-                      child: Wid_Con.textfield(
+                      child:Padding(padding: EdgeInsets.only(bottom: 5),
+                        child: Wid_Con.textfield(
                           onChanged: (value) {
                             if (mounted) {
-                              setState(() {});
+                              setState(() {
+                                _filterContacts(value.toLowerCase());
+                              });
                             }
                             return null;
                           },
@@ -199,8 +242,39 @@ setState(() {
                               width: 3,
                               height: 3,
                             ),
-                          )),
+                          ),),
+                      ),
                     ),
+                    isMultiSelectionEnabled==true?
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 18, left: 8, bottom: 8),
+                      child: Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            color: white.withOpacity(0.5),
+                            border: Border.all(color: white),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Center(
+                            child: IconButton(
+                                onPressed: () {
+                                  selectItems.forEach((e) {
+                                    _deleteItem(e['key']);
+                                  });
+                                  setState(() {
+                                    isMultiSelectionEnabled=false;
+                                  });
+                                },
+                                icon: Image(
+                                  image: AssetImage(
+                                     'assets/images/clear_Image.png'),
+                                  height: 20,
+                                )),
+                          ),
+
+                      ),
+                    ):Container(),
                   ],
                 ),
                 Obx(
@@ -211,7 +285,7 @@ setState(() {
                       removeTop: true,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 5),
-                        child: _items.isEmpty
+                        child: _filteredContacts.isEmpty
                             ? Center(
                                 child: SingleChildScrollView(
                                   child: Column(
@@ -249,11 +323,11 @@ setState(() {
                                           crossAxisSpacing: 15,
                                           mainAxisExtent: 250,
                                           mainAxisSpacing: 15),
-                                  itemCount: _items.length,
+                                  itemCount: _filteredContacts.length,
                                   itemBuilder: (BuildContext context, int i) {
-                                    _items.removeWhere((item) =>
+                                    _filteredContacts.removeWhere((item) =>
                                         item['name'] == null && item['phone']);
-                                    _items.sort((a, b) {
+                                    _filteredContacts.sort((a, b) {
                                       String nameA = a['name'] ?? '';
                                       String nameB = b['name'] ?? '';
 
@@ -268,17 +342,25 @@ setState(() {
                                       // Otherwise, sort based on the names
                                       return nameA.compareTo(nameB);
                                     });
-                                    final currentItem = _items[i];
+                                    final currentItem = _filteredContacts[i];
 
                                     return GestureDetector(
                                       onTap: () async {
-
+                                        doMultiSelection(currentItem);
+                                        print('---------------Select----------> $selectItems');
+                                      },
+                                      onLongPress: (){
+                                        setState(() {
+                                          isMultiSelectionEnabled = true;
+                                        });
+                                        doMultiSelection(currentItem);
+                                        print('---------------Select----------> $selectItems');
                                       },
                                       child: Container(
                                        decoration: BoxDecoration(
                                          color: white.withOpacity(0.5),
                                          borderRadius: BorderRadius.circular(10),
-                                         border: Border.all(color: white),
+                                         border: Border.all(color: selectItems.contains(currentItem)?themeDarkColor:white),
                                          boxShadow: [
 // BoxShadow(
 //   color: Colors.grey.shade300,
@@ -466,7 +548,7 @@ setState(() {
                       removeTop: true,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 5),
-                        child: _items.isEmpty
+                        child: _filteredContacts.isEmpty
                             ? Center(
                           child: SingleChildScrollView(
                             child: Column(
@@ -496,12 +578,12 @@ setState(() {
                         //       child:
                         ListView.builder(
                           controller: widget.controller,
-                          itemCount: _items.length,
+                          itemCount: _filteredContacts.length,
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (BuildContext context, int i) {
-                            _items.removeWhere((item) =>
+                            _filteredContacts.removeWhere((item) =>
                             item['name'] == null && item['phone']);
-                            _items.sort((a, b) {
+                            _filteredContacts.sort((a, b) {
                               String nameA = a['name'] ?? '';
                               String nameB = b['name'] ?? '';
 
@@ -516,7 +598,7 @@ setState(() {
                               // Otherwise, sort based on the names
                               return nameA.compareTo(nameB);
                             });
-                            final currentItem = _items[i];
+                            final currentItem = _filteredContacts[i];
 
                             return GestureDetector(
                               onTap: () async {

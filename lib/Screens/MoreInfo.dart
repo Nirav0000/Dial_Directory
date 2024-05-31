@@ -1,6 +1,9 @@
+import 'package:country_codes/country_codes.dart';
 import 'package:direct_dialer/direct_dialer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:geocoding/geocoding.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -28,8 +31,34 @@ class _MoreInfoState extends State<MoreInfo> {
     // TODO: implement initState
     super.initState();
     setupDialer();
+    getlatlon();
+
   }
   Future<void> setupDialer() async => dialer = await DirectDialer.instance;
+
+  getlatlon() async {
+    await CountryCodes.init(); // Optionally, you may provide a `Locale` to get countrie's localizadName
+
+    final Locale? deviceLocale = CountryCodes.getDeviceLocale();
+    print(deviceLocale?.languageCode); // Displays en
+    print(deviceLocale?.countryCode); // Displays US
+
+    final CountryDetails details = CountryCodes.detailsForLocale();
+    print(details.alpha2Code); // Displays alpha2Code, for example US.
+    print(details.dialCode); // Displays the dial code, for example +1.
+    print(details.name); // Displays the extended name, for example United States.
+    print(details.localizedName); // Displays the extended name based on device's language (or other, if provided on init)
+    // await Geolocator.requestPermission();
+    // var position = await GeolocatorPlatform.instance
+    //     .getCurrentPosition();
+    // List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    // final add = placemarks.first;
+    // setState(() {
+      print('--pincode---> ${WidgetsBinding.instance.window.locale.countryCode}');
+      // print('--pincode---> ${languages}');
+    // });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,40 +80,114 @@ class _MoreInfoState extends State<MoreInfo> {
             children: [
               Container(
                 margin: EdgeInsets.only(top: 100, left: 10, right: 10),
-                height: 200,
+
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(30)),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 35),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${widget.name}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontFamily: "Montserrat",
-                            color: themeDarkColor,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 80),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${widget.name}',
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: "Montserrat",
+                                color: themeDarkColor,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              '${widget.phone}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  color: themeDarkColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          '${widget.phone}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: "Montserrat",
-                              color: themeDarkColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
-                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20,top: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                              splashColor: transparent,
+                              hoverColor: transparent,
+                              onTap: () async {
+                                await dialer?.dial(widget.phone.toString());
+                              },
+                              child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: white,
+                                      borderRadius: BorderRadius.circular(50)
+                                  ),
+                                  child: Center(child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)))),
+                          InkWell(
+                              splashColor: transparent,
+                              hoverColor: transparent,
+                              onTap: () {
+                                if(widget.phone!=null){
+                                  launchUrl(Uri.parse("sms:${widget.phone.toString()}"));
+                                }
+
+                              },
+                              child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: white,
+                                      borderRadius: BorderRadius.circular(50)
+                                  ),
+                                  child: Center(child: const Image(image: AssetImage('assets/images/message.png'),height: 23,)))),
+                          InkWell(
+                              splashColor: transparent,
+                              hoverColor: transparent,
+                              onTap: () async {
+                                String email = Uri.encodeComponent(
+                                    "niravlukhi71@gnail.com");
+                                String subject =
+                                Uri.encodeComponent("Hello Sir,");
+                                String body =
+                                Uri.encodeComponent("Hi! ");
+                                print(
+                                    subject); //output: Hello%20Flutter
+                                Uri mail = Uri.parse(
+                                    "mailto:$email?subject=$subject&body=$body");
+                                if (await launchUrl(mail)) {
+                                //email app opened
+                                } else {
+                                //email app is not opened
+                                }
+                              },
+                              child: Container(
+                                height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: white,
+                                    borderRadius: BorderRadius.circular(50)
+                                  ),
+                                  child: Center(child: const Image(image: AssetImage('assets/images/mail.png'),height: 25,)))),
+                        ],
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
               if (widget.image != null)
@@ -463,87 +566,90 @@ class _MoreInfoState extends State<MoreInfo> {
           ),
           Container(
             margin: EdgeInsets.only(top: 20, left: 10, right: 10),
-            height: 150,
             width: double.infinity,
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(30)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image(
-                      image: AssetImage('assets/images/sim.png'),
-                      height: 25,
-                    ),
-                    Text(
-                      'Sim 1',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          color: themeDarkColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    Image(
-                      image: AssetImage('assets/images/sim.png'),
-                      height: 25,
-                    ),
-                    Text(
-                      'Sim 2',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          color: themeDarkColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Container(
-                    // color: grey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                            splashColor: transparent,
-                            hoverColor: transparent,
-                            onTap: () async {
-                              await dialer?.dial(widget.phone.toString());
-                            },
-                            child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
-                        InkWell(
-                            splashColor: transparent,
-                            hoverColor: transparent,
-                            onTap: () {
-                              if(widget.phone!=null){
-                                launchUrl(Uri.parse("sms:${widget.phone.toString()}"));
-                              }
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
 
-                            },
-                            child: const Image(image: AssetImage('assets/images/message.png'),height: 23,)),
-                        InkWell(
-                            splashColor: transparent,
-                            hoverColor: transparent,
-                            onTap: () {
-                              setState(() {
+                          InkWell(
+                              splashColor: transparent,
+                              hoverColor: transparent,
+                              onTap: () async {
+                                if(widget.phone!=null){
+                                  launchUrl(Uri.parse("https://wa.me/+91${widget.phone}"));
+                                }
+                              },
+                              child: Container(
+                                color: transparent,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Image(image: AssetImage('assets/images/whatsapp.png'),height: 25,),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: Text(
+                                        'WhatsApp ( ${widget.phone} )',
+                                        overflow: TextOverflow.clip,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            color: themeDarkColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Divider(
+                              color: grey,
+                              thickness: 0.3,
 
-                              });
-                            },
-                            child: Image(
-                              image: AssetImage(
-                              'assets/images/whatsapp.png'),
-                              height: 22,)),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+                            ),
+                          ),
+                          InkWell(
+                              splashColor: transparent,
+                              hoverColor: transparent,
+                              onTap: () {
+                                if(widget.phone!=null){
+                                  launchUrl(Uri.parse("https://t.me/+91${widget.phone}"));
+                                }
+
+                              },
+                              child: Container(
+                                color: transparent,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Image(image: AssetImage('assets/images/telegram.png'),height: 25,),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: Text(
+                                        'Telegram ( ${widget.phone} )',
+                                        overflow: TextOverflow.clip,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            color: themeDarkColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                ],
+              ),
             ),
           )
         ],
@@ -562,10 +668,49 @@ class _MoreInfoState extends State<MoreInfo> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/edit.png'),height: 20,)),
-            IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/share.png'),height: 20,)),
-            IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/mail.png'),height: 25,)),
-            IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/more.png'),height: 20,)),
+            Column(
+              children: [
+                IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/edit.png'),height: 22,)),
+                Text(
+                  'Edit',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      color: themeDarkColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/share.png'),height: 20,)),
+                Text(
+                  'Share',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      color: themeDarkColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+
+            Column(
+              children: [
+                IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/more.png'),height: 20,)),
+                Text(
+                  'More',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      color: themeDarkColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
 
           ],
         ),

@@ -10,8 +10,9 @@ import '../Widget/widgets.dart';
 import 'MoreInfo.dart';
 
 class FavoriteScreen extends StatefulWidget {
-  const FavoriteScreen({super.key, this.controller});
+  const FavoriteScreen({super.key, this.controller, this.fevData});
   final ScrollController? controller;
+  final  fevData;
 
 
   @override
@@ -114,216 +115,219 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           //   thickness: 5,
                           //       thumbVisibility: false,
                           //       child:
-                          GridView.builder(
-                            controller: widget.controller,
-                            physics: BouncingScrollPhysics(),
-                            gridDelegate:
-                            SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent:
-                                /*provider.isDark ? 150 :*/ 200,
-                                crossAxisSpacing: 15,
-                                mainAxisExtent: 250,
-                                mainAxisSpacing: 15),
-                            itemCount: _items.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              _items.removeWhere((item) =>
-                              item['name'] == null && item['phone']);
-                              _items.sort((a, b) {
-                                String nameA = a['name'] ?? '';
-                                String nameB = b['name'] ?? '';
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: GridView.builder(
+                              controller: widget.controller,
+                              physics: BouncingScrollPhysics(),
+                              gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent:
+                                  /*provider.isDark ? 150 :*/ 200,
+                                  crossAxisSpacing: 15,
+                                  mainAxisExtent: 250,
+                                  mainAxisSpacing: 15),
+                              itemCount: _items.length,
+                              itemBuilder: (BuildContext context, int i) {
+                                _items.removeWhere((item) =>
+                                item['name'] == null && item['phone']);
+                                _items.sort((a, b) {
+                                  String nameA = a['name'] ?? '';
+                                  String nameB = b['name'] ?? '';
 
-                                // If either contact has no name, move it to the end
-                                if (nameA.isEmpty && nameB.isNotEmpty) {
-                                  return 1;
-                                } else if (nameA.isNotEmpty &&
-                                    nameB.isEmpty) {
-                                  return -1;
-                                }
+                                  // If either contact has no name, move it to the end
+                                  if (nameA.isEmpty && nameB.isNotEmpty) {
+                                    return 1;
+                                  } else if (nameA.isNotEmpty &&
+                                      nameB.isEmpty) {
+                                    return -1;
+                                  }
 
-                                // Otherwise, sort based on the names
-                                return nameA.compareTo(nameB);
-                              });
-                              final currentItem = _items[i];
+                                  // Otherwise, sort based on the names
+                                  return nameA.compareTo(nameB);
+                                });
+                                final currentItem = _items[i];
 
-                              return GestureDetector(
-                                onTap: () async {
+                                return GestureDetector(
+                                  onTap: () async {
 
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: white.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: white),
-                                      boxShadow: [
-// BoxShadow(
-//   color: Colors.grey.shade300,
-//   offset: Offset(1, 1),
-//   spreadRadius: 1,
-//   blurRadius: 10
-// )
-                                      ]
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(bottom: 10),
-                                              child: Stack(
-                                                alignment: Alignment.bottomCenter,
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(left: 8,right:8,top: 8,bottom: 25),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.grey.shade100,
-                                                        borderRadius: BorderRadius.circular(10),
-                                                        image:  currentItem['image']!= null?DecorationImage(
-                                                            image:MemoryImage(
-                                                                currentItem['image']),fit: BoxFit.cover):DecorationImage(
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: white.withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: white),
+                                        boxShadow: [
+                            // BoxShadow(
+                            //   color: Colors.grey.shade300,
+                            //   offset: Offset(1, 1),
+                            //   spreadRadius: 1,
+                            //   blurRadius: 10
+                            // )
+                                        ]
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(bottom: 10),
+                                                child: Stack(
+                                                  alignment: Alignment.bottomCenter,
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 8,right:8,top: 8,bottom: 25),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.grey.shade100,
+                                                          borderRadius: BorderRadius.circular(10),
+                                                          image:  currentItem['image']!= null?DecorationImage(
+                                                              image:MemoryImage(
+                                                                  currentItem['image']),fit: BoxFit.cover):DecorationImage(
 
-                                                            image:AssetImage('assets/images/EmptyImage.png'),fit: BoxFit.cover)),
-                                                  ),
-                                                  ClipRRect(
-                                                    borderRadius: BorderRadius.circular(100),
-                                                    child: BackdropFilter(
-                                                      filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                                                      child: Container(
-                                                        height: 70,
-                                                        width: 70,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(color: black.withOpacity(0.1)),
-                                                            color: Colors.white.withOpacity(0.1),
-                                                            borderRadius: BorderRadius.circular(100)
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            currentItem['name'][0] ??
-                                                                '',
-                                                            overflow: TextOverflow
-                                                                .ellipsis,
-                                                            style: const TextStyle(
-                                                                fontFamily:
-                                                                "Montserrat",
-                                                                fontSize: 25,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                              image:AssetImage('assets/images/EmptyImage.png'),fit: BoxFit.cover)),
+                                                    ),
+                                                    ClipRRect(
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      child: BackdropFilter(
+                                                        filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                                                        child: Container(
+                                                          height: 70,
+                                                          width: 70,
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(color: black.withOpacity(0.1)),
+                                                              color: Colors.white.withOpacity(0.1),
+                                                              borderRadius: BorderRadius.circular(100)
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              currentItem['name'][0] ??
+                                                                  '',
+                                                              overflow: TextOverflow
+                                                                  .ellipsis,
+                                                              style: const TextStyle(
+                                                                  fontFamily:
+                                                                  "Montserrat",
+                                                                  fontSize: 25,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  )
-                                                ],
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Container(
+                                            Container(
 
-                                              width: width / 2,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .center,
-                                                children: [
-                                                  Text(
-                                                    currentItem['name'] ??
-                                                        '',
-                                                    overflow: TextOverflow
-                                                        .ellipsis,
-                                                    style: const TextStyle(
-                                                        fontFamily:
-                                                        "Montserrat",
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w600),
-                                                  ),
-                                                  Text(
-                                                    currentItem['phone'] ??
-                                                        '',
-                                                    overflow: TextOverflow
-                                                        .ellipsis,
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                        "Montserrat",
-                                                        color: grey,
-                                                        fontSize: 13,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w600),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                                    child: Container(
-                                                      // color: grey,
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                        children: [
-                                                          InkWell(
-                                                              splashColor: transparent,
-                                                              hoverColor: transparent,
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  // provider.toggleFavorite(currentItem);
-                                                                  if (_items.contains(
-                                                                      currentItem)) {
-                                                                    _items.remove(
-                                                                        currentItem);
-                                                                  } else {
-                                                                    _items.add(
-                                                                        currentItem);
-                                                                  }
-                                                                  saveSelectedItems();
-                                                                });
-                                                              },
-                                                              child: Image(
-                                                                image: AssetImage(
-                                                                    _items.contains(currentItem)?
-                                                                'assets/images/fevorit_nonfill.png':
-                                                                'assets/images/Fevorit.png'),
-                                                                height: 22,)),
-                                                          InkWell(
-                                                              splashColor: transparent,
-                                                              hoverColor: transparent,
-                                                              onTap: () async {
-                                                                await dialer?.dial(currentItem['phone']);
-                                                              },
-                                                              child: Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
-                                                          InkWell(
-                                                              splashColor: transparent,
-                                                              hoverColor: transparent,
-                                                              onTap: () {
-                                                                if(currentItem['phone']!=''){
-                                                                  launchUrl(Uri.parse("sms:${currentItem['phone']}"));
-                                                                }
-
-                                                              },
-                                                              child: Image(image: AssetImage('assets/images/message.png'),height: 23,)),
-                                                          InkWell(
-                                                              splashColor: transparent,
-                                                              hoverColor: transparent,
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  // _deleteItem(currentItem['key']);
-                                                                  Wid_Con.NavigationTo( MoreInfo());
-                                                                });
-
-                                                              },
-                                                              child: Image(image: AssetImage('assets/images/moe.png'),height: 18,)),
-                                                        ],
-                                                      ),
+                                                width: width / 2,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    Text(
+                                                      currentItem['name'] ??
+                                                          '',
+                                                      overflow: TextOverflow
+                                                          .ellipsis,
+                                                      style: const TextStyle(
+                                                          fontFamily:
+                                                          "Montserrat",
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w600),
                                                     ),
-                                                  )
-                                                ],
-                                              )),
-                                        ],
-                                      ),
-                                    ],
+                                                    Text(
+                                                      currentItem['phone'] ??
+                                                          '',
+                                                      overflow: TextOverflow
+                                                          .ellipsis,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                          "Montserrat",
+                                                          color: grey,
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w600),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                                      child: Container(
+                                                        // color: grey,
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                          children: [
+                                                            InkWell(
+                                                                splashColor: transparent,
+                                                                hoverColor: transparent,
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    // provider.toggleFavorite(currentItem);
+                                                                    if (_items.contains(
+                                                                        currentItem)) {
+                                                                      _items.remove(
+                                                                          currentItem);
+                                                                    } else {
+                                                                      _items.add(
+                                                                          currentItem);
+                                                                    }
+                                                                    saveSelectedItems();
+                                                                  });
+                                                                },
+                                                                child: Image(
+                                                                  image: AssetImage(
+                                                                      _items.contains(currentItem)?
+                                                                  'assets/images/fevorit_nonfill.png':
+                                                                  'assets/images/Fevorit.png'),
+                                                                  height: 22,)),
+                                                            InkWell(
+                                                                splashColor: transparent,
+                                                                hoverColor: transparent,
+                                                                onTap: () async {
+                                                                  await dialer?.dial(currentItem['phone']);
+                                                                },
+                                                                child: Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
+                                                            InkWell(
+                                                                splashColor: transparent,
+                                                                hoverColor: transparent,
+                                                                onTap: () {
+                                                                  if(currentItem['phone']!=''){
+                                                                    launchUrl(Uri.parse("sms:${currentItem['phone']}"));
+                                                                  }
+
+                                                                },
+                                                                child: Image(image: AssetImage('assets/images/message.png'),height: 23,)),
+                                                            InkWell(
+                                                                splashColor: transparent,
+                                                                hoverColor: transparent,
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    // _deleteItem(currentItem['key']);
+                                                                    Wid_Con.NavigationTo( MoreInfo());
+                                                                  });
+
+                                                                },
+                                                                child: Image(image: AssetImage('assets/images/more.png'),height: 18,)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                           // ),
                         ),

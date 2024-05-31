@@ -64,137 +64,135 @@ class _BottomTabbarState extends State<BottomTabbar>
     final Color unselectedColor = colors[currentPage].computeLuminance() < 0.5
         ? Colors.black
         : Colors.white;
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 70),
-          child: FloatingActionButton(
-            child: Image(
-              image: AssetImage('assets/images/keyPadFilled.png'),
-              height: 25,
-            ),
-            backgroundColor: bottomBG,
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  constraints: BoxConstraints.loose(Size(
-                      MediaQuery.of(context).size.width,
-                      580)),
-                  isScrollControlled: true,
-                  builder: (BuildContext context) {
-                    return  KeyPadSheet(dialer: dialer,);
-                 }
-              );
-            },
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 70),
+        child: FloatingActionButton(
+          child: Image(
+            image: AssetImage('assets/images/keyPadFilled.png'),
+            height: 25,
           ),
+          backgroundColor: bottomBG,
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                constraints: BoxConstraints.loose(Size(
+                    MediaQuery.of(context).size.width,
+                    580)),
+                isScrollControlled: true,
+                builder: (BuildContext context) {
+                  return  KeyPadSheet(dialer: dialer,);
+               }
+            );
+          },
         ),
-        body: BottomBar(
-          barDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  color: grey.withOpacity(0.5),
-                  // offset: Offset(0, 5),
-                )
-              ]),
-          fit: StackFit.passthrough,
-          icon: (width, height) => Center(
-            child: Text('${storage.read('totalContacts')} Contacts'),
-          ),
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          duration: Duration(milliseconds: 200),
-          curve: Curves.decelerate,
-          showIcon: true,
-          width: double.infinity,
-          // width: MediaQuery.of(context).size.width * 1,
-          barColor: bottomBG,
-          start: 2,
-          end: 0,
-          offset: 0,
-          barAlignment: Alignment.bottomCenter,
-          iconHeight: 35,
-          iconWidth: 100,
-          reverse: false,
-          hideOnScroll: true,
-          scrollOpposite: false,
-          onBottomBarHidden: () {},
-          onBottomBarShown: () {},
-          body: (context, controller) => TabBarView(
-              controller: tabController,
-              dragStartBehavior: DragStartBehavior.down,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                Grid_Screen(
-                  controller: controller,
-                ),
-                FavoriteScreen(
-                  controller: controller,
-                ),
-                Test(),
-              ]),
-          child: TabBar(
-            dividerHeight: 0,
-            automaticIndicatorColorAdjustment: true,
-            padding: EdgeInsets.symmetric(vertical: 5),
-            indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+      ),
+      body: BottomBar(
+        barDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                spreadRadius: 1,
+                blurRadius: 5,
+                color: grey.withOpacity(0.5),
+                // offset: Offset(0, 5),
+              )
+            ]),
+        fit: StackFit.passthrough,
+        icon: (width, height) => Center(
+          child: Text('${storage.read('totalContacts')} Contacts'),
+        ),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        duration: Duration(milliseconds: 200),
+        curve: Curves.decelerate,
+        showIcon: true,
+        width: double.infinity,
+        // width: MediaQuery.of(context).size.width * 1,
+        barColor: bottomBG,
+        start: 2,
+        end: 0,
+        offset: 0,
+        barAlignment: Alignment.bottomCenter,
+        iconHeight: 35,
+        iconWidth: 100,
+        reverse: false,
+        hideOnScroll: true,
+        scrollOpposite: false,
+        onBottomBarHidden: () {},
+        onBottomBarShown: () {},
+        body: (context, controller) => TabBarView(
             controller: tabController,
-            splashFactory: NoSplash.splashFactory,
-            splashBorderRadius: BorderRadius.circular(10),
-            indicator: UnderlineTabIndicator(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                    color: currentPage == 0
-                        ? white
-                        : currentPage == 1
-                            ? white
-                            : currentPage == 2
-                                ? white
-                                : currentPage == 3
-                                    ? white
-                                    : unselectedColor,
-                    width: 4),
-                insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
-            tabs: [
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                    child: Image(
-                  image: AssetImage(currentPage == 0
-                      ? 'assets/images/HomeManuFill.png'
-                      : 'assets/images/HomeManu.png'),
-                  height: 25,
-                )),
+            dragStartBehavior: DragStartBehavior.down,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              Grid_Screen(
+                controller: controller,
               ),
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                    child: Image(
-                  image: AssetImage(currentPage == 1
-                      ? 'assets/images/FavoritFillManu.png'
-                      : 'assets/images/FavoritManu.png'),
-                  height: 30,
-                )),
+              FavoriteScreen(
+                controller: controller,
               ),
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                    child: Image(
-                  image: AssetImage(
-                      currentPage == 3
-                      ? 'assets/images/SettingFillManu.png'
-                      : 'assets/images/SettingManu.png'),
-                  height: 30,
-                )),
-              ),
-            ],
-          ),
+              Test(),
+            ]),
+        child: TabBar(
+          dividerHeight: 0,
+          automaticIndicatorColorAdjustment: true,
+          padding: EdgeInsets.symmetric(vertical: 5),
+          indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+          controller: tabController,
+          splashFactory: NoSplash.splashFactory,
+          splashBorderRadius: BorderRadius.circular(10),
+          indicator: UnderlineTabIndicator(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                  color: currentPage == 0
+                      ? white
+                      : currentPage == 1
+                          ? white
+                          : currentPage == 2
+                              ? white
+                              : currentPage == 3
+                                  ? white
+                                  : unselectedColor,
+                  width: 4),
+              insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
+          tabs: [
+            SizedBox(
+              height: 55,
+              width: 40,
+              child: Center(
+                  child: Image(
+                image: AssetImage(currentPage == 0
+                    ? 'assets/images/HomeManuFill.png'
+                    : 'assets/images/HomeManu.png'),
+                height: 25,
+              )),
+            ),
+            SizedBox(
+              height: 55,
+              width: 40,
+              child: Center(
+                  child: Image(
+                image: AssetImage(currentPage == 1
+                    ? 'assets/images/FavoritFillManu.png'
+                    : 'assets/images/FavoritManu.png'),
+                height: 30,
+              )),
+            ),
+            SizedBox(
+              height: 55,
+              width: 40,
+              child: Center(
+                  child: Image(
+                image: AssetImage(
+                    currentPage == 3
+                    ? 'assets/images/SettingFillManu.png'
+                    : 'assets/images/SettingManu.png'),
+                height: 30,
+              )),
+            ),
+          ],
         ),
       ),
     );
