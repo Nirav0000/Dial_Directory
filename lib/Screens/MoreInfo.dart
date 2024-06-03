@@ -1,4 +1,3 @@
-import 'package:country_codes/country_codes.dart';
 import 'package:direct_dialer/direct_dialer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,34 +30,9 @@ class _MoreInfoState extends State<MoreInfo> {
     // TODO: implement initState
     super.initState();
     setupDialer();
-    getlatlon();
-
   }
   Future<void> setupDialer() async => dialer = await DirectDialer.instance;
 
-  getlatlon() async {
-    await CountryCodes.init(); // Optionally, you may provide a `Locale` to get countrie's localizadName
-
-    final Locale? deviceLocale = CountryCodes.getDeviceLocale();
-    print(deviceLocale?.languageCode); // Displays en
-    print(deviceLocale?.countryCode); // Displays US
-
-    final CountryDetails details = CountryCodes.detailsForLocale();
-    print(details.alpha2Code); // Displays alpha2Code, for example US.
-    print(details.dialCode); // Displays the dial code, for example +1.
-    print(details.name); // Displays the extended name, for example United States.
-    print(details.localizedName); // Displays the extended name based on device's language (or other, if provided on init)
-    // await Geolocator.requestPermission();
-    // var position = await GeolocatorPlatform.instance
-    //     .getCurrentPosition();
-    // List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-    // final add = placemarks.first;
-    // setState(() {
-      print('--pincode---> ${WidgetsBinding.instance.window.locale.countryCode}');
-      // print('--pincode---> ${languages}');
-    // });
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -582,7 +556,7 @@ class _MoreInfoState extends State<MoreInfo> {
                               hoverColor: transparent,
                               onTap: () async {
                                 if(widget.phone!=null){
-                                  launchUrl(Uri.parse("https://wa.me/+91${widget.phone}"));
+                                  launchUrl(Uri.parse("https://wa.me/${storage.read('CountryCode')}${widget.phone}"));
                                 }
                               },
                               child: Container(
@@ -699,7 +673,7 @@ class _MoreInfoState extends State<MoreInfo> {
 
             Column(
               children: [
-                IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/more.png'),height: 20,)),
+                IconButton(onPressed: (){}, icon: Image(image: AssetImage('assets/images/more.png'),height: 25,)),
                 Text(
                   'More',
                   overflow: TextOverflow.ellipsis,

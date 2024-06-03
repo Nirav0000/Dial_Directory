@@ -18,12 +18,6 @@
 @import contacts_service;
 #endif
 
-#if __has_include(<country_codes/CountryCodesPlugin.h>)
-#import <country_codes/CountryCodesPlugin.h>
-#else
-@import country_codes;
-#endif
-
 #if __has_include(<device_info_plus/FLTDeviceInfoPlusPlugin.h>)
 #import <device_info_plus/FLTDeviceInfoPlusPlugin.h>
 #else
@@ -40,6 +34,12 @@
 #import <flutter_contacts/FlutterContactsPlugin.h>
 #else
 @import flutter_contacts;
+#endif
+
+#if __has_include(<flutter_sim_country_code/FlutterSimCountryCodePlugin.h>)
+#import <flutter_sim_country_code/FlutterSimCountryCodePlugin.h>
+#else
+@import flutter_sim_country_code;
 #endif
 
 #if __has_include(<image_picker_ios/FLTImagePickerPlugin.h>)
@@ -71,10 +71,10 @@
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
   [ContactsServicePlugin registerWithRegistrar:[registry registrarForPlugin:@"ContactsServicePlugin"]];
-  [CountryCodesPlugin registerWithRegistrar:[registry registrarForPlugin:@"CountryCodesPlugin"]];
   [FLTDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlusPlugin"]];
   [DirectDialerPlugin registerWithRegistrar:[registry registrarForPlugin:@"DirectDialerPlugin"]];
   [FlutterContactsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterContactsPlugin"]];
+  [FlutterSimCountryCodePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSimCountryCodePlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];

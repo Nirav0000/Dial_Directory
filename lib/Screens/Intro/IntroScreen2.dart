@@ -1,15 +1,20 @@
+
+
 import 'package:caller_app/Screens/Intro/page_model.dart';
-import 'package:concentric_transition/concentric_transition.dart';
+import 'package:concentric_transition/page_view.dart';
+import 'package:country_calling_code_picker/country.dart';
+import 'package:country_calling_code_picker/country_code_picker.dart';
+import 'package:country_calling_code_picker/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import '../../Constent/Colors.dart';
 import '../../Widget/widgets.dart';
 import '../BottomTabBar.dart';
-
 
 class Intro2 extends StatefulWidget {
   @override
@@ -27,6 +32,8 @@ class _Intro2State extends State<Intro2> {
   bool isload = false;
 
   bool? istrue;
+
+  Country? _selectedCountry;
 
   final pages = [
     const PageData(
@@ -49,14 +56,30 @@ class _Intro2State extends State<Intro2> {
     ),
   ];
 
+  void _onPressed() async {
+    final country =
+    await Navigator.push(context, new MaterialPageRoute(builder: (context) {
+      return PickerPage();
+    }));
+    if (country != null) {
+      setState(() {
+        _selectedCountry = country;
+        print('--------country code------> ${_selectedCountry?.callingCode}  --- ${ _selectedCountry?.name}');
+        storage.write('CountryCode', _selectedCountry?.callingCode);
+          istrue == true
+              ? Wid_Con.NavigationOffAll(BottomTabbar())
+              : Container();
+      });
+    }
+  }
 
   requestStoragePermission() async {
-
+    _onPressed();
     var status = await Permission.phone.request();
     var Status1 = await Permission.contacts.request();
     print('step 1 ');
     if (Status1.isGranted && status.isGranted) {
-
+      print('--------country code2------> ${_selectedCountry?.callingCode}  --- ${ _selectedCountry?.name}');
       setState(() {
         isload = true;
       });
@@ -106,11 +129,15 @@ class _Intro2State extends State<Intro2> {
       print('step 9 ');
 
       print('step 10 ');
+
       _items.isNotEmpty ? istrue = true : const CircularProgressIndicator();
 
-      istrue == true
-          ? Wid_Con.NavigationOffAll(BottomTabbar())
-          : Container();
+
+      if(_selectedCountry!.callingCode.isNotEmpty){
+        istrue == true
+            ? Wid_Con.NavigationOffAll(BottomTabbar())
+            : Container();
+      }
 
     }else{}
 
@@ -121,6 +148,22 @@ class _Intro2State extends State<Intro2> {
     // );
     // await intent.launch();
   }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // initCountry();
+  }
+
+  // void initCountry() async {
+  //   final country = await getDefaultCountry(context);
+  //   setState(() {
+  //     _selectedCountry = country;
+  //   });
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -225,6 +268,31 @@ class _Text extends StatelessWidget {
       children: [
         Text('${page.title}',style: style,textAlign: TextAlign.center,),
       ],
+    );
+  }
+}
+
+
+class PickerPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: themeColor,
+        appBar: AppBar(
+          backgroundColor: themeColor,
+          title: Text('Select Country'),
+          automaticallyImplyLeading: false,
+        ),
+        body: Container(
+          child: CountryPickerWidget(
+            onSelected: (country) => Navigator.pop(context, country),
+          ),
+        ),
+      ),
     );
   }
 }

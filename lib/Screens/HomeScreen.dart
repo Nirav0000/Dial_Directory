@@ -119,7 +119,11 @@ setState(() {
     log('------------------>$selectedList');
     setState(() {
       FevoritsItme = selectedList ?? [];
-      storage.write('FavriteContacts', FevoritsItme);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          storage.write('FavriteContacts', FevoritsItme);
+        });
+      });
     });
   }
   Future<void> _deleteItem(int itemKey) async {
@@ -521,8 +525,8 @@ setState(() {
 
                                                                   },
                                                                   child: Container(
-                                                                    height: 18,
-                                                                      width: 15,
+                                                                    height: 25,
+                                                                      width: 25,
                                                                       // color: grey,
                                                                       child: const Image(image: AssetImage('assets/images/more.png'),))),
                                                               ],
