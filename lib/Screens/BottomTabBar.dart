@@ -9,11 +9,13 @@ import '../Bottom_bar/BottomBar.dart';
 import 'FavoriteScreen.dart';
 import 'HomeScreen.dart';
 import 'KeypadSheet.dart';
+import 'SettingScreen.dart';
 
 class BottomTabbar extends StatefulWidget {
   BottomTabbar({
-    Key? key,
+    Key? key, this.page,
   }) : super(key: key);
+  final page;
 
   @override
   _BottomTabbarState createState() => _BottomTabbarState();
@@ -66,7 +68,8 @@ class _BottomTabbarState extends State<BottomTabbar>
         : Colors.white;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Padding(
+      floatingActionButton:tabController.index!=2?
+      Padding(
         padding: const EdgeInsets.only(bottom: 70),
         child: FloatingActionButton(
           child: Image(
@@ -79,7 +82,7 @@ class _BottomTabbarState extends State<BottomTabbar>
                 context: context,
                 constraints: BoxConstraints.loose(Size(
                     MediaQuery.of(context).size.width,
-                    580)),
+                  MediaQuery.of(context).size.height * 0.85,)),
                 isScrollControlled: true,
                 builder: (BuildContext context) {
                   return  KeyPadSheet(dialer: dialer,);
@@ -87,7 +90,8 @@ class _BottomTabbarState extends State<BottomTabbar>
             );
           },
         ),
-      ),
+      ):
+      Container(),
       body: BottomBar(
         barDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -118,7 +122,7 @@ class _BottomTabbarState extends State<BottomTabbar>
         iconHeight: 35,
         iconWidth: 100,
         reverse: false,
-        hideOnScroll: true,
+        hideOnScroll:storage.read('totalContacts')==null?false: int.parse(storage.read('totalContacts').toString())<20?false:true,
         scrollOpposite: false,
         onBottomBarHidden: () {},
         onBottomBarShown: () {},
@@ -133,7 +137,7 @@ class _BottomTabbarState extends State<BottomTabbar>
               FavoriteScreen(
                 controller: controller,
               ),
-              Test(),
+              SettingScreen(),
             ]),
         child: TabBar(
           dividerHeight: 0,

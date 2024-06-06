@@ -44,12 +44,21 @@ dependencies:
   permission_handler: ^9.2.0
   flutter_contacts: ^1.1.7
   get_storage: ^2.1.1
-  direct_dialer: ^1.2.0
+  direct_dialer:
   url_launcher: ^6.2.6
   lottie: ^3.1.2
   concentric_transition: ^1.0.3
   image_picker: ^1.1.1
   country_calling_code_picker: ^2.0.1
+  pull_down_button: ^0.9.4
+  qr_flutter: ^4.1.0
+  screenshot:
+  share_plus:
+  path_provider:
+  qr_code_scanner: ^1.0.1
+  vcard_maintained: ^0.0.1+1
+  launch_review: ^3.0.1
+  flutter_share: ^2.0.0
 
 dev_dependencies:
   flutter_test:

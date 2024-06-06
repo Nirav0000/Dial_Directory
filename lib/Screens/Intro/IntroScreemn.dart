@@ -73,7 +73,8 @@ class _IntroState extends State<Intro> {
         _createItem({
           "name": e.displayName.isEmpty ? '' : e.displayName,
           "phone": e.phones.isEmpty ? '' : e.phones.first.number,
-          "image": e.photo
+          "image": e.photo,
+          "email": ''
         });
       }); // });
       // }
@@ -85,7 +86,8 @@ class _IntroState extends State<Intro> {
           "key": key,
           "name": value["name"],
           "phone": value['phone'],
-          "image": value['image']
+          "image": value['image'],
+          "email": value['email'],
         };
       }).toList();
       print('step 7 ');

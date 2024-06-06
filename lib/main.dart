@@ -19,7 +19,12 @@ Future<void> main() async {
   await Hive.openBox('GetContacts');
   runApp(
     GetMaterialApp(
-      // home: MyHomePage(),
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.transparent,
+        ),
+      ),
+      // home: MyHome(),
       home: storage.read('gotContact')==true? BottomTabbar():Intro2(),
       debugShowCheckedModeBanner: false,
     )

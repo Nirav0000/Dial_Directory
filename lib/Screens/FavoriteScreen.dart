@@ -60,7 +60,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Wid_Con.textfield(
+                  Padding(padding: EdgeInsets.only(top: 45),
+                  child: Wid_Con.textfield(
                       onChanged: (value) {
                         if (mounted) {
                           setState(() {});
@@ -68,6 +69,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         return null;
                       },
                       filled: true,
+                    contentvertical: 5,
                       filledColor: white.withOpacity(0.5),
                       hintText: "Search",
                       borderSide: BorderSide(color: white),
@@ -79,7 +81,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           width: 3,
                           height: 3,
                         ),
-                      )),
+                      ),),),
 
                     Expanded(
                       child: MediaQuery.removePadding(
@@ -309,11 +311,18 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                                 onTap: () {
                                                                   setState(() {
                                                                     // _deleteItem(currentItem['key']);
-                                                                    Wid_Con.NavigationTo( MoreInfo());
+                                                                    Wid_Con.NavigationTo( MoreInfo(
+                                                                      image: currentItem['image'],
+                                                                      name: currentItem['name'],
+                                                                      phone: currentItem['phone'],
+                                                                      index: currentItem['key'],
+                                                                      email: currentItem['email'],
+                                                                      CurrentIndex: currentItem,
+                                                                    ));
                                                                   });
 
                                                                 },
-                                                                child: Image(image: AssetImage('assets/images/more.png'),height: 18,)),
+                                                                child: Image(image: AssetImage('assets/images/more.png'),height: 23,)),
                                                           ],
                                                         ),
                                                       ),

@@ -1,4 +1,4 @@
-package com.dn.callerapp.caller_app
+package com.dn.callerapp
 
 import io.flutter.embedding.android.FlutterActivity
 

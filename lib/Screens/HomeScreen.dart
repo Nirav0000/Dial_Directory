@@ -79,7 +79,8 @@ class _Grid_ScreenState extends State<Grid_Screen> {
         "key": key,
         "name": value["name"],
         "phone": value['phone'],
-        "image": value['image']
+        "image": value['image'],
+        "email": value['email'],
       };
     }).toList();
 
@@ -224,8 +225,9 @@ setState(() {
                       ),
                     ),
                     Expanded(
-                      child:Padding(padding: EdgeInsets.only(bottom: 5),
+                      child:Padding(padding: EdgeInsets.only(bottom: 5,top: 30),
                         child: Wid_Con.textfield(
+                            borderwidth: 1,
                           onChanged: (value) {
                             if (mounted) {
                               setState(() {
@@ -234,6 +236,7 @@ setState(() {
                             }
                             return null;
                           },
+                          contentvertical: 5,
                           filled: true,
                           filledColor: white.withOpacity(0.5),
                           hintText: "Search",
@@ -509,7 +512,7 @@ setState(() {
                                                                   }
 
                                                                 },
-                                                                  child: const Image(image: AssetImage('assets/images/message.png'),height: 23,)),
+                                                                  child: const Image(image: AssetImage('assets/images/message.png'),height: 25,)),
                                                               InkWell(
                                                                   splashColor: transparent,
                                                                   hoverColor: transparent,
@@ -520,6 +523,9 @@ setState(() {
                                                                         image: currentItem['image'],
                                                                         name: currentItem['name'],
                                                                         phone: currentItem['phone'],
+                                                                        index: currentItem['key'],
+                                                                        email: currentItem['email'],
+                                                                        CurrentIndex: currentItem,
                                                                       ));
                                                                     });
 
@@ -607,6 +613,7 @@ setState(() {
                             return GestureDetector(
                               onTap: () async {
                                 setState(() {
+
                                   _selectedIndex = i;
                                 });
                                 // await dialer?.dial(currentItem['phone']);
@@ -726,7 +733,7 @@ setState(() {
                                                                       }
 
                                                                     },
-                                                                    child: const Image(image: AssetImage('assets/images/message.png'),height: 23,)),
+                                                                    child: const Image(image: AssetImage('assets/images/message.png'),height: 25,)),
                                                                 InkWell(
                                                                     splashColor: transparent,
                                                                     hoverColor: transparent,
@@ -737,13 +744,15 @@ setState(() {
                                                                           image: currentItem['image'],
                                                                           name: currentItem['name'],
                                                                           phone: currentItem['phone'],
+                                                                          index: currentItem['key'],
+                                                                          CurrentIndex: currentItem,
                                                                         ));
                                                                       });
 
                                                                     },
                                                                     child: Container(
-                                                                        height: 18,
-                                                                        width: 15,
+                                                                        height: 25,
+                                                                        width: 25,
                                                                         child: const Image(image: AssetImage('assets/images/more.png'),))),
                                                               ],
                                                             ),

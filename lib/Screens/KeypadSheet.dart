@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../Constent/Colors.dart';
+import 'EditScreen.dart';
 
 class KeyPadSheet extends StatefulWidget {
   const KeyPadSheet({super.key, this.dialer});
@@ -89,12 +90,12 @@ class _KeyPadSheetState extends State<KeyPadSheet> {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.75,
+        height: ContectController.text.isNotEmpty?MediaQuery.of(context).size.height * 0.78:MediaQuery.of(context).size.height * 0.706,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40),
-            topRight: Radius.circular(40),
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
           ),
         ),
         child: Column(
@@ -107,6 +108,43 @@ class _KeyPadSheetState extends State<KeyPadSheet> {
                   color: grey.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(50)),
             ),
+            ContectController.text.isNotEmpty?
+            InkWell(
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onTap: (){
+Wid_Con.NavigationTo(EditScreen(NewNumber: ContectController.text,));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: themeDarkColor)
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(CupertinoIcons.add_circled,color: themeDarkColor, size: 25,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text('Create contact',style: TextStyle(
+                            color: themeDarkColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18
+                          ),),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ):Container(),
             TextFormField(
 
               keyboardType: TextInputType.none,
@@ -120,6 +158,10 @@ class _KeyPadSheetState extends State<KeyPadSheet> {
                 borderSide: BorderSide.none
                 )
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Divider(),
             ),
             GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

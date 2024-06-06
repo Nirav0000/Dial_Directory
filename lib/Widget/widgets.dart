@@ -22,7 +22,7 @@ class Wid_Con {
   }
 
   static textfield(
-      {String? titelText,
+      {
         var suffixIcon,
         var prefixIcon,
         var controller,
@@ -35,6 +35,7 @@ class Wid_Con {
         double? paddingbottom,
         double? paddingleft,
         double? paddingright,
+        double? borderwidth,
         var focusedBorder,
         errorBorder,
         key,
@@ -47,79 +48,58 @@ class Wid_Con {
         // ignore: use_function_type_syntax_for_parameters
         Function(String)? onChanged,
         var maxLines,double? width,double? height,
-        Color? titelcolor,
         var borderSide}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding:  EdgeInsets.only(bottom:paddingbottom?? 5, left: paddingleft??5,top: paddingtop??0,right: paddingright??0),
-          child: Text(titelText ?? '',
-            style: Text_Style(
-                color: black,
-                fontSize: 14,
+    return SizedBox(
+      height:height??60,
+      width: width,
+      child: TextFormField(
+        validator: validator,
+        obscureText: obscureText??false,
+        style: TextStyle(fontWeight: FontWeight.w500,color: themeDarkColor),
+        key: key,
+        inputFormatters: inputFormatters,
+        maxLines:maxLines??1,
+        keyboardType: keyboardType??TextInputType.text,
+        controller: controller,
+        onChanged: onChanged,
+        cursorColor: themeDarkColor,
+        decoration: InputDecoration(
+            labelText: labelText,
+            contentPadding:EdgeInsets.symmetric(horizontal: contenthorizontal??15,vertical: contentvertical??15),
+            suffixIcon: suffixIcon,
+            prefixIcon: prefixIcon,
+            filled: filled??false,
+            fillColor: filledColor??grey,
+            hintText: hintText??'',
+            hintStyle: TextStyle(
+                color: grey,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Medium'
-            ),),
-        ),
-        SizedBox(
-          height:height??60,
-          width: width,
-          child: TextFormField(
-            validator: validator,
-            obscureText: obscureText??false,
-
-            style: TextStyle(fontWeight: FontWeight.w500,color: themeDarkColor),
-            key: key,
-            inputFormatters: inputFormatters,
-            maxLines:maxLines??1,
-            keyboardType: keyboardType??TextInputType.text,
-            controller: controller,
-            onChanged: onChanged,
-            cursorColor: themeDarkColor,
-            decoration: InputDecoration(
-                labelText: labelText,
-                contentPadding:EdgeInsets.symmetric(horizontal: contenthorizontal??15,vertical: contentvertical??5),
-                suffixIcon: suffixIcon,
-                prefixIcon: prefixIcon,
-                filled: filled??false,
-                fillColor: filledColor??grey,
-                hintText: hintText??'',
-                hintStyle: TextStyle(
-                    color: grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Medium'
-                ),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: themeDarkColor,width: 1)),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  borderSide: BorderSide( color: white,width: 1),
-                ),
-                errorBorder: OutlineInputBorder(
-                  gapPadding: 50,
-                  borderRadius: BorderRadius.circular(50),
-                  borderSide: BorderSide( color: red,width: 1),
-                ),
-                errorText: errorText,
-
-                floatingLabelStyle: TextStyle(
-                    color: themeColor,
-                    fontFamily: 'Medium'
-                ),
-                labelStyle: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Medium'
-                ),
-                border: OutlineInputBorder(
-borderSide: borderSide??BorderSide.none,
-                  borderRadius: BorderRadius.circular(50),
-                )),
-          ),
-        ),
-      ],
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: themeDarkColor,width: borderwidth??2)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide( color: white,width:borderwidth?? 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              gapPadding: 50,
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide( color: red,width: 2),
+            ),
+            errorText: errorText,
+            floatingLabelStyle: TextStyle(
+                color: themeDarkColor,
+            ),
+            labelStyle: TextStyle(
+                fontSize: 15,
+            ),
+            border: OutlineInputBorder(
+    borderSide: borderSide??BorderSide.none,
+              borderRadius: BorderRadius.circular(10),
+            )),
+      ),
     );
   }
 
@@ -136,35 +116,29 @@ borderSide: borderSide??BorderSide.none,
     double? elevation,
     double? borderWidth
   }) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(ButtonRadius??10.0),
+    return ElevatedButton(
+      style: ButtonStyle(
+        overlayColor: MaterialStateProperty.all<Color?>(Colors.grey.withOpacity(0.5)),
+          elevation: MaterialStateProperty.all<double?>(elevation),
+          minimumSize:
+          MaterialStateProperty.all<Size?>( Size(width??double.infinity,height?? 50)),
+          // fixedSize: ,
 
-      ),
-      child: ElevatedButton(
-        style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color?>(Colors.grey.withOpacity(0.5)),
-            elevation: MaterialStateProperty.all<double?>(elevation),
-            minimumSize:
-            MaterialStateProperty.all<Size?>( Size(width??double.infinity,height?? 50)),
-            // fixedSize: ,
+          backgroundColor: MaterialStateProperty.all<Color?>(ButtonColor??themeDarkColor),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
 
-            backgroundColor: MaterialStateProperty.all<Color?>(ButtonColor??transparent),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-
-                  side: BorderSide(color:Bordercolor??black,width: borderWidth??2),
-                  borderRadius: BorderRadius.circular(ButtonRadius??10.0),
-                ))),
-        onPressed: onPressed,
-        child:child ?? Text(
-          ButtonName??'',
-          style: TextStyle(
-              color:titelcolor?? white,
-              fontSize:fontSize??20,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Light'
-          ),
+                // side: BorderSide(color:Bordercolor??black,width: borderWidth??2),
+                borderRadius: BorderRadius.circular(ButtonRadius??10.0),
+              ))),
+      onPressed: onPressed,
+      child:child ?? Text(
+        ButtonName??'',
+        style: TextStyle(
+            color:titelcolor?? white,
+            fontSize:fontSize??20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Light'
         ),
       ),
     );
