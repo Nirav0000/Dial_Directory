@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../Constent/Colors.dart';
+import '../../Widget/widgets.dart';
+import '../EditScreen.dart';
 
 class Scanner_qr extends StatefulWidget {
   const Scanner_qr({Key? key}) : super(key: key);
@@ -21,6 +24,7 @@ class _Scanner_qrState extends State<Scanner_qr> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String name = '';
   String phoneNumber = '';
+  String QRversion = '';
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -103,18 +107,39 @@ class _Scanner_qrState extends State<Scanner_qr> {
           // Regular expressions to extract the name and phone number
           RegExp nameRegExp = RegExp(r'N:(.*?);');
           RegExp phoneRegExp = RegExp(r'TEL;TYPE=CELL:(.*)');
-
+          RegExp Version = RegExp(r'VERSION:(.*)');
+          if(Version.firstMatch(result!.code.toString())!.group(1).toString()=='CallerApp'){
           setState(() {
             // Extracting the name
              name = nameRegExp.firstMatch(result!.code.toString())!.group(1).toString();
             // Extracting the phone number
              phoneNumber = phoneRegExp.firstMatch(result!.code.toString())!.group(1).toString();
+             QRversion = Version.firstMatch(result!.code.toString())!.group(1).toString();
 
             print('Name: $name');
             print('Phone Number: $phoneNumber');
+            print('QRversion: $QRversion');
+
+              Wid_Con.NavigationTo(EditScreen(
+                nameEdit: name.toString(),
+                numberEdit: phoneNumber.toString(),
+              ));
+
+
           });
           // Printing the results
-
+        }else{
+            Get.back();
+          Fluttertoast.showToast(
+              msg: "This QR is not accessed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: themeDarkColor,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }
 
 
       });

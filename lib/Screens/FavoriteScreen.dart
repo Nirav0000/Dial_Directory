@@ -55,40 +55,35 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       backgroundColor: themeColor,
       body: Stack(
           children: [
+            _items.isEmpty?Container():
+            Align(
+              alignment: Alignment.center,
+              child: Image(image: AssetImage('assets/images/bg_like.png'),height: 200,opacity: const AlwaysStoppedAnimation(.6),),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(padding: EdgeInsets.only(top: 45),
-                  child: Wid_Con.textfield(
-                      onChanged: (value) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                        return null;
-                      },
-                      filled: true,
-                    contentvertical: 5,
-                      filledColor: white.withOpacity(0.5),
-                      hintText: "Search",
-                      borderSide: BorderSide(color: white),
-
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Image.asset(
-                          'assets/images/Search.png',
-                          width: 3,
-                          height: 3,
-                        ),
-                      ),),),
+                  child:Center(
+                    child: Text(
+                      "Favorites",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          color: themeDarkColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),),
 
                     Expanded(
                       child: MediaQuery.removePadding(
                         context: context,
                         removeTop: true,
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 5),
+                          padding: const EdgeInsets.only(top: 25),
                           child: _items.isEmpty
                               ? Center(
                             child: SingleChildScrollView(

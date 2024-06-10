@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:direct_dialer/direct_dialer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 // import 'package:geocoding/geocoding.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -92,7 +93,7 @@ class _MoreInfoState extends State<MoreInfo> {
       child: Scaffold(
         backgroundColor: themeColor,
         appBar: AppBar(
-          backgroundColor: themeColor,
+          backgroundColor: transparent,
           elevation: 0,
           leading: IconButton(
               onPressed: () {
@@ -100,248 +101,268 @@ class _MoreInfoState extends State<MoreInfo> {
               },
               icon: Icon(Icons.arrow_back_ios)),
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 100, left: 10, right: 10),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 80),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${widget.name}',
-                              overflow: TextOverflow.clip,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  color: themeDarkColor,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                '${widget.phone}',
-                                overflow: TextOverflow.ellipsis,
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Transform.translate(
+                offset: Offset(-40, 30),
+                  child: Image(image: AssetImage('assets/images/bg_mail.png'),height: 200,opacity: const AlwaysStoppedAnimation(.6),)),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Transform.translate(
+                  offset: Offset(20, -100),
+                  child: Image(image: AssetImage('assets/images/bg_call.png'),height: 150,opacity: const AlwaysStoppedAnimation(.6),)),
+            ),
+            Column(
+            children: [
+              Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 100, left: 10, right: 10),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(30)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 80),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${widget.name}',
+                                overflow: TextOverflow.clip,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontFamily: "Montserrat",
                                     color: themeDarkColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  '${widget.phone}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      color: themeDarkColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20, top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                  splashColor: transparent,
+                                  hoverColor: transparent,
+                                  onTap: () async {
+                                    await dialer?.dial(widget.phone.toString());
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          color: white,
+                                          borderRadius: BorderRadius.circular(50)),
+                                      child: Center(
+                                          child: const Image(
+                                        image: AssetImage(
+                                            'assets/images/call_icon.png'),
+                                        height: 22,
+                                      )))),
+                              InkWell(
+                                  splashColor: transparent,
+                                  hoverColor: transparent,
+                                  onTap: () {
+                                    if (widget.phone != null) {
+                                      launchUrl(Uri.parse(
+                                          "sms:${widget.phone.toString()}"));
+                                    }
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          color: white,
+                                          borderRadius: BorderRadius.circular(50)),
+                                      child: Center(
+                                          child: const Image(
+                                        image:
+                                            AssetImage('assets/images/message.png'),
+                                        height: 23,
+                                      )))),
+                              InkWell(
+                                  splashColor: transparent,
+                                  hoverColor: transparent,
+                                  onTap: () async {
+                                    String email = Uri.encodeComponent(
+                                        "${widget.email!=null? widget.email:""}");
+                                    String subject =
+                                        Uri.encodeComponent("Hello...,");
+                                    String body = Uri.encodeComponent("Hi! ");
+                                    print(subject); //output: Hello%20Flutter
+                                    Uri mail = Uri.parse(
+                                        "mailto:$email?subject=$subject&body=$body");
+                                    if (await launchUrl(mail)) {
+                                      //email app opened
+                                    } else {
+                                      //email app is not opened
+                                    }
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          color: white,
+                                          borderRadius: BorderRadius.circular(50)),
+                                      child: Center(
+                                          child: const Image(
+                                        image: AssetImage('assets/images/mail.png'),
+                                        height: 25,
+                                      )))),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: widget.image == null
+                          ? CircleAvatar(
+                              radius: 70,
+                              backgroundImage:
+                                  AssetImage('assets/images/EmptyImage.png'),
+                            )
+                          : widget.image.toString().contains('assets/images')?CircleAvatar(
+                        backgroundColor: white,
+                        backgroundImage:AssetImage(widget.image),
+                        radius: 70,
+                      ):CircleAvatar(
+                        backgroundColor: white,
+                        backgroundImage:MemoryImage(widget.image),
+                        radius: 70,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(30)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                          splashColor: transparent,
+                          hoverColor: transparent,
+                          onTap: () async {
+                            if (widget.phone != null) {
+                              launchUrl(Uri.parse(widget.phone
+                                      .toString()
+                                      .contains('+')
+                                  ? "https://wa.me/${widget.phone}"
+                                  : "https://wa.me/${storage.read('CountryCode')}${widget.phone}"));
+                            }
+                          },
+                          child: Container(
+                            color: transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Image(
+                                  image: AssetImage('assets/images/whatsapp.png'),
+                                  height: 25,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    'WhatsApp ( ${widget.phone} )',
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        color: themeDarkColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Divider(
+                          color: grey,
+                          thickness: 0.3,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20, top: 20),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                                splashColor: transparent,
-                                hoverColor: transparent,
-                                onTap: () async {
-                                  await dialer?.dial(widget.phone.toString());
-                                },
-                                child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        color: white,
-                                        borderRadius: BorderRadius.circular(50)),
-                                    child: Center(
-                                        child: const Image(
-                                      image: AssetImage(
-                                          'assets/images/call_icon.png'),
-                                      height: 22,
-                                    )))),
-                            InkWell(
-                                splashColor: transparent,
-                                hoverColor: transparent,
-                                onTap: () {
-                                  if (widget.phone != null) {
-                                    launchUrl(Uri.parse(
-                                        "sms:${widget.phone.toString()}"));
-                                  }
-                                },
-                                child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        color: white,
-                                        borderRadius: BorderRadius.circular(50)),
-                                    child: Center(
-                                        child: const Image(
-                                      image:
-                                          AssetImage('assets/images/message.png'),
-                                      height: 23,
-                                    )))),
-                            InkWell(
-                                splashColor: transparent,
-                                hoverColor: transparent,
-                                onTap: () async {
-                                  String email = Uri.encodeComponent(
-                                      "${widget.email!=null? widget.email:""}");
-                                  String subject =
-                                      Uri.encodeComponent("Hello...,");
-                                  String body = Uri.encodeComponent("Hi! ");
-                                  print(subject); //output: Hello%20Flutter
-                                  Uri mail = Uri.parse(
-                                      "mailto:$email?subject=$subject&body=$body");
-                                  if (await launchUrl(mail)) {
-                                    //email app opened
-                                  } else {
-                                    //email app is not opened
-                                  }
-                                },
-                                child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        color: white,
-                                        borderRadius: BorderRadius.circular(50)),
-                                    child: Center(
-                                        child: const Image(
-                                      image: AssetImage('assets/images/mail.png'),
-                                      height: 25,
-                                    )))),
-                          ],
-                        ),
-                      )
+                      InkWell(
+                          splashColor: transparent,
+                          hoverColor: transparent,
+                          onTap: () {
+                            if (widget.phone != null) {
+                              launchUrl(Uri.parse(widget.phone
+                                      .toString()
+                                      .contains('+')
+                                  ? "https://t.me/${widget.phone}"
+                                  : "https://t.me/${storage.read('CountryCode')}${widget.phone}"));
+                            }
+                          },
+                          child: Container(
+                            color: transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Image(
+                                  image: AssetImage('assets/images/telegram.png'),
+                                  height: 25,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    'Telegram ( ${widget.phone} )',
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        color: themeDarkColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
                     ],
                   ),
                 ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: widget.image == null
-                        ? CircleAvatar(
-                            radius: 70,
-                            backgroundImage:
-                                AssetImage('assets/images/EmptyImage.png'),
-                          )
-                        : CircleAvatar(
-                            radius: 70,
-                            backgroundImage: MemoryImage(widget.image),
-                          ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 20, left: 10, right: 10),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(30)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                        splashColor: transparent,
-                        hoverColor: transparent,
-                        onTap: () async {
-                          if (widget.phone != null) {
-                            launchUrl(Uri.parse(widget.phone
-                                    .toString()
-                                    .contains('+')
-                                ? "https://wa.me/${widget.phone}"
-                                : "https://wa.me/${storage.read('CountryCode')}${widget.phone}"));
-                          }
-                        },
-                        child: Container(
-                          color: transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/images/whatsapp.png'),
-                                height: 25,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  'WhatsApp ( ${widget.phone} )',
-                                  overflow: TextOverflow.clip,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      color: themeDarkColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Divider(
-                        color: grey,
-                        thickness: 0.3,
-                      ),
-                    ),
-                    InkWell(
-                        splashColor: transparent,
-                        hoverColor: transparent,
-                        onTap: () {
-                          if (widget.phone != null) {
-                            launchUrl(Uri.parse(widget.phone
-                                    .toString()
-                                    .contains('+')
-                                ? "https://t.me/${widget.phone}"
-                                : "https://t.me/${storage.read('CountryCode')}${widget.phone}"));
-                          }
-                        },
-                        child: Container(
-                          color: transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/images/telegram.png'),
-                                height: 25,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  'Telegram ( ${widget.phone} )',
-                                  overflow: TextOverflow.clip,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      color: themeDarkColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-            )
-          ],
+              )
+            ],
+          )],
         ),
         bottomNavigationBar: Container(
           height: 80,
@@ -415,13 +436,13 @@ class _MoreInfoState extends State<MoreInfo> {
                         title: 'QR code',
                         icon: CupertinoIcons.qrcode,
                       ),
-                      PullDownMenuItem(
-                        title: 'Scanner',
-                        onTap: () {
-                          Wid_Con.NavigationTo(Scanner_qr());
-                        },
-                        icon: CupertinoIcons.qrcode_viewfinder,
-                      ),
+                      // PullDownMenuItem(
+                      //   title: 'Scanner',
+                      //   onTap: () {
+                      //     Wid_Con.NavigationTo(Scanner_qr());
+                      //   },
+                      //   icon: CupertinoIcons.qrcode_viewfinder,
+                      // ),
                       PullDownMenuItem(
                         onTap: () {
                           setState(() {

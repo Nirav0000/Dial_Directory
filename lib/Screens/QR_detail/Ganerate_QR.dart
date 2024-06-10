@@ -80,8 +80,9 @@ class _Ganerate_QRState extends State<Ganerate_QR> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 QrImageView(
-                  data:'N:${widget.name};\n'
-                      'TEL;TYPE=CELL:${storage.read('CountryCode')} ${widget.mobile_number}',
+                  data:'VERSION:CallerApp\n'
+                      'N:${widget.name};\n'
+                      'TEL;TYPE=CELL:${widget.mobile_number.toString().contains('+')?'':storage.read('CountryCode')} ${widget.mobile_number}',
                   version: QrVersions.auto,
                   size: 300.0,
                   dataModuleStyle: QrDataModuleStyle(dataModuleShape: QrDataModuleShape.circle, color: Colors.black),

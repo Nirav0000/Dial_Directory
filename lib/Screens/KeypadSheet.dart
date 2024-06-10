@@ -6,10 +6,12 @@ import 'package:flutter/widgets.dart';
 
 import '../Constent/Colors.dart';
 import 'EditScreen.dart';
+import 'QR_detail/Scanner_qr.dart';
 
 class KeyPadSheet extends StatefulWidget {
-  const KeyPadSheet({super.key, this.dialer});
+  const KeyPadSheet({super.key, this.dialer, this.getContact});
   final DirectDialer? dialer;
+  final  getContact;
 
   @override
   State<KeyPadSheet> createState() => _KeyPadSheetState();
@@ -28,6 +30,9 @@ class _KeyPadSheetState extends State<KeyPadSheet> {
     // TODO: implement initState
     super.initState();
     setupDialer();
+    if(widget.getContact!=null){
+      ContectController.text = widget.getContact.toString();
+    }
     ContectController = ContectController..addListener(_onSelectionChanged);
     _selection = ContectController.selection;
   }
@@ -304,12 +309,34 @@ Wid_Con.NavigationTo(EditScreen(NewNumber: ContectController.text,));
               ],
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: Container()),
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20,top: 20),
+                          child: Wid_Con.keyPadButton(
+                              onLongPress: () {
+                                setState(() {
+                                  ContectController.clear();
+                                });
+                              },
+                              onPressed: () {
+                                Wid_Con.NavigationTo(Scanner_qr());
+                              },
+                              child: Icon(CupertinoIcons.qrcode_viewfinder,size: 35,color: themeDarkColor,),
+                              ButtonRadius: 100,
+                              height: 70,
+                              width: 50,
+                              fontSize: 30),
+                        ))),
                 Padding(
                   padding: EdgeInsets.only(top: 20),
-                  child:
+                  child:Align(
+                    alignment: Alignment.center,
+                    child:
                 Wid_Con.keyPadButton(
                     onPressed: () async {
                       if(ContectController.text.isNotEmpty){
@@ -326,12 +353,13 @@ Wid_Con.NavigationTo(EditScreen(NewNumber: ContectController.text,));
                     height: 75,
                     width: 50,
                     fontSize: 30),
+                  ),
                 ),
                 Expanded(
                     child: Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
-                          padding: EdgeInsets.only(right: 20),
+                          padding: EdgeInsets.only(right: 20,top: 20),
                           child: Wid_Con.keyPadButton(
                             onLongPress: () {
                               setState(() {

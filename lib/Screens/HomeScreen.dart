@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 import 'package:direct_dialer/direct_dialer.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,6 +45,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
   int _selectedIndex = -1;
   DirectDialer? dialer;
   List _filteredContacts = [];
+  int isexpan = -1;
 
   @override
   void initState() {
@@ -199,14 +201,14 @@ setState(() {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 18, right: 8, bottom: 8),
+                          top: 20, right: 12, bottom: 8),
                       child: Container(
-                        height: 45,
-                        width: 45,
+                        height: 48,
+                        width: 48,
                         decoration: BoxDecoration(
                             color: white.withOpacity(0.5),
                             border: Border.all(color: white),
-                            borderRadius: BorderRadius.circular(50)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: Obx(
                           () => Center(
                             child: IconButton(
@@ -392,7 +394,9 @@ setState(() {
                                                         decoration: BoxDecoration(
                                                           color: Colors.grey.shade100,
                                                             borderRadius: BorderRadius.circular(10),
-                                                            image:  currentItem['image']!= null?DecorationImage(
+                                                            image:  currentItem['image']!= null?currentItem['image'].toString().contains('assets/images')?DecorationImage(
+                                                                image:AssetImage(
+                                                                    currentItem['image']),fit: BoxFit.contain):DecorationImage(
                                                                 image:MemoryImage(
                                                                     currentItem['image']),fit: BoxFit.cover):const DecorationImage(
 
@@ -615,6 +619,12 @@ setState(() {
                                 setState(() {
 
                                   _selectedIndex = i;
+
+                                  Timer(Duration(milliseconds: 300), () {
+                                    setState(() {
+                                      isexpan = i;
+                                    });
+                                  });
                                 });
                                 // await dialer?.dial(currentItem['phone']);
                               },
@@ -637,24 +647,32 @@ setState(() {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 currentItem['image']!= null?
+                                                currentItem['image'].toString().contains('assets/images')?
                                                 CircleAvatar(
-
+                                                  backgroundColor: white,
+                                                  radius: 25,
+                                                  backgroundImage: AssetImage(currentItem['image']),
+                                                ):
+                                                CircleAvatar(
+                                                  backgroundColor: white,
                                                   radius: 25,
                                                   backgroundImage: MemoryImage(currentItem['image']),
-                                                ):const CircleAvatar(
+                                                ): CircleAvatar(
+                                                  backgroundColor: white,
                                                 radius: 25,
                                                                           backgroundImage: AssetImage('assets/images/EmptyImage.png'),
                                                                           ),
                                                 Expanded(
                                                   child: Padding(
-                                                    padding: const EdgeInsets.only(left: 10,),
+                                                    padding: const EdgeInsets.only(left: 10,top: 5),
                                                     child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment:
                                                       CrossAxisAlignment
                                                           .start,
@@ -689,71 +707,87 @@ setState(() {
 
                                                         _selectedIndex == i?
                                                         Padding(
-                                                          padding: const EdgeInsets.only(right: 10,top: 10),
+                                                          padding: const EdgeInsets.only(right: 10,top: 10 ),
                                                           child: Container(
                                                             // color: grey,
                                                             child: Row(
                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                               children: [
-                                                                InkWell(
-                                                                    splashColor: transparent,
-                                                                    hoverColor: transparent,
-                                                                    onTap: () {
-                                                                      setState(() {
-                                                                        // provider.toggleFavorite(currentItem);
-                                                                        if (FevoritsItme.contains(
-                                                                            currentItem)) {
-                                                                          FevoritsItme.remove(
-                                                                              currentItem);
-                                                                        } else {
-                                                                          FevoritsItme.add(
-                                                                              currentItem);
+                                                                AnimatedContainer(
+                                                                  height: isexpan == i?20:0,
+                                                                  duration: Duration(milliseconds: 300),
+                                                                  child: InkWell(
+                                                                      splashColor: transparent,
+                                                                      hoverColor: transparent,
+                                                                      onTap: () {
+                                                                        setState(() {
+                                                                          // provider.toggleFavorite(currentItem);
+                                                                          if (FevoritsItme.contains(
+                                                                              currentItem)) {
+                                                                            FevoritsItme.remove(
+                                                                                currentItem);
+                                                                          } else {
+                                                                            FevoritsItme.add(
+                                                                                currentItem);
+                                                                          }
+                                                                          saveSelectedItems();
+                                                                        });
+                                                                      },
+                                                                      child: Image(
+                                                                        image: AssetImage(FevoritsItme.contains(currentItem)?
+                                                                        'assets/images/fevorit_nonfill.png':
+                                                                        'assets/images/Fevorit.png'),
+                                                                        height: 22,)),
+                                                                ),
+                                                                AnimatedContainer(
+                                                                  height: isexpan == i?20:0,
+                                                                  duration: Duration(milliseconds: 300),
+                                                                  child: InkWell(
+                                                                      splashColor: transparent,
+                                                                      hoverColor: transparent,
+                                                                      onTap: () async {
+                                                                        await dialer?.dial(currentItem['phone']);
+                                                                      },
+                                                                      child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
+                                                                ),
+                                                                AnimatedContainer(
+                                                                  height: isexpan == i?23:0,
+                                                                  duration: Duration(milliseconds: 300),
+                                                                  child: InkWell(
+                                                                      splashColor: transparent,
+                                                                      hoverColor: transparent,
+                                                                      onTap: () {
+                                                                        if(currentItem['phone']!=''){
+                                                                          launchUrl(Uri.parse("sms:${currentItem['phone']}"));
                                                                         }
-                                                                        saveSelectedItems();
-                                                                      });
-                                                                    },
-                                                                    child: Image(
-                                                                      image: AssetImage(FevoritsItme.contains(currentItem)?
-                                                                      'assets/images/fevorit_nonfill.png':
-                                                                      'assets/images/Fevorit.png'),
-                                                                      height: 22,)),
-                                                                InkWell(
-                                                                    splashColor: transparent,
-                                                                    hoverColor: transparent,
-                                                                    onTap: () async {
-                                                                      await dialer?.dial(currentItem['phone']);
-                                                                    },
-                                                                    child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
-                                                                InkWell(
-                                                                    splashColor: transparent,
-                                                                    hoverColor: transparent,
-                                                                    onTap: () {
-                                                                      if(currentItem['phone']!=''){
-                                                                        launchUrl(Uri.parse("sms:${currentItem['phone']}"));
-                                                                      }
 
-                                                                    },
-                                                                    child: const Image(image: AssetImage('assets/images/message.png'),height: 25,)),
-                                                                InkWell(
-                                                                    splashColor: transparent,
-                                                                    hoverColor: transparent,
-                                                                    onTap: () {
-                                                                      setState(() {
-                                                                        // _deleteItem(currentItem['key']);
-                                                                        Wid_Con.NavigationTo( MoreInfo(
-                                                                          image: currentItem['image'],
-                                                                          name: currentItem['name'],
-                                                                          phone: currentItem['phone'],
-                                                                          index: currentItem['key'],
-                                                                          CurrentIndex: currentItem,
-                                                                        ));
-                                                                      });
+                                                                      },
+                                                                      child: const Image(image: AssetImage('assets/images/message.png'),height: 25,)),
+                                                                ),
+                                                                AnimatedContainer(
+                                                                  height: isexpan == i?23:0,
+                                                                  duration: Duration(milliseconds: 300),
+                                                                  child: InkWell(
+                                                                      splashColor: transparent,
+                                                                      hoverColor: transparent,
+                                                                      onTap: () {
+                                                                        setState(() {
+                                                                          // _deleteItem(currentItem['key']);
+                                                                          Wid_Con.NavigationTo( MoreInfo(
+                                                                            image: currentItem['image'],
+                                                                            name: currentItem['name'],
+                                                                            phone: currentItem['phone'],
+                                                                            index: currentItem['key'],
+                                                                            CurrentIndex: currentItem,
+                                                                          ));
+                                                                        });
 
-                                                                    },
-                                                                    child: Container(
-                                                                        height: 25,
-                                                                        width: 25,
-                                                                        child: const Image(image: AssetImage('assets/images/more.png'),))),
+                                                                      },
+                                                                      child: Container(
+                                                                          height: 25,
+                                                                          width: 25,
+                                                                          child: const Image(image: AssetImage('assets/images/more.png'),))),
+                                                                ),
                                                               ],
                                                             ),
                                                           ),

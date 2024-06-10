@@ -36,23 +36,26 @@ class _Intro2State extends State<Intro2> {
   Country? _selectedCountry;
 
   final pages = [
-    const PageData(
-      title: "Make some\nnoise",
-      image: "assets/images/first.json",
-      bdColor: AppColors.backgroundLightBlack,
+     PageData(
+      title: "Welcome to the Phonebook",
+      image: "assets/images/intro_1.png",
+      // bdColor: AppColors.backgroundLightBlack,
+      bdColor: themeDarkColor,
       txtColor: AppColors.textColor,
     ),
-    const PageData(
-      title: "Let's hunt\nghosts",
-      image: "assets/images/second.json",
-      bdColor: AppColors.backgroundPista,
-      txtColor: Colors.black,
+     PageData(
+      title: "Better Contact\nManagement",
+      image: "assets/images/intro_2.png",
+      // bdColor: AppColors.backgroundPista,
+       bdColor: bottomBG,
+      txtColor: AppColors.textColor,
     ),
-    const PageData(
-      title: "Join the\nGhost Gang.",
-      image: "assets/images/gang.json",
-      bdColor: Colors.white,
-      txtColor: Colors.black,
+     PageData(
+      title: "Connect Across\nContinents.",
+      image: "assets/images/intro_3.png",
+      // bdColor: Colors.white,
+       bdColor: moreinfobg,
+      txtColor: AppColors.textColor,
     ),
   ];
 
@@ -195,8 +198,9 @@ class _Intro2State extends State<Intro2> {
           padding: const EdgeInsets.all(8.0),
           child:isload == false?Icon(
             Icons.navigate_next,
+            color: themeColor,
             size: screenWidth*0.08,
-          ):CircularProgressIndicator(),
+          ):CircularProgressIndicator(color: themeColor,),
         ),
       ),
     );
@@ -220,10 +224,10 @@ class _Page  extends StatelessWidget{
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: -5,
-                blurRadius: 50,
-                offset: const Offset(0, 30),
+                color: Colors.white.withOpacity(0.3),
+                spreadRadius: 0,
+                blurRadius: 10,
+                offset: const Offset(0, 0),
               ),
             ],
           ),
@@ -234,7 +238,7 @@ class _Page  extends StatelessWidget{
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset(page.image.toString(),),
+                  Image.asset(page.image.toString(),),
                 ],
               )),),
         space(10),

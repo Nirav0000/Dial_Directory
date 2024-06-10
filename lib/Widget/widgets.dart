@@ -78,10 +78,10 @@ class Wid_Con {
             ),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: themeDarkColor,width: borderwidth??2)),
+                borderSide: BorderSide(color: themeDarkColor,width: borderwidth??1)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide( color: white,width:borderwidth?? 2),
+              borderSide: BorderSide( color: white,width:borderwidth?? 1),
             ),
             errorBorder: OutlineInputBorder(
               gapPadding: 50,
@@ -128,7 +128,7 @@ class Wid_Con {
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
 
-                // side: BorderSide(color:Bordercolor??black,width: borderWidth??2),
+                side: BorderSide(color:Bordercolor??transparent,width: borderWidth??0),
                 borderRadius: BorderRadius.circular(ButtonRadius??10.0),
               ))),
       onPressed: onPressed,
