@@ -244,11 +244,17 @@ class _MoreInfoState extends State<MoreInfo> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: widget.image == null
-                          ? CircleAvatar(
-                              radius: 70,
-                              backgroundImage:
-                                  AssetImage('assets/images/EmptyImage.png'),
-                            )
+                          ? Container(
+                        decoration: BoxDecoration(
+                         shape: BoxShape.circle,
+                          border: Border.all(color: themeColor,width: 5)
+                        ),
+                            child: CircleAvatar(
+                                radius: 70,
+                                backgroundImage:
+                                    AssetImage('assets/images/EmptyImage.png'),
+                              ),
+                          )
                           : widget.image.toString().contains('assets/images')?CircleAvatar(
                         backgroundColor: white,
                         backgroundImage:AssetImage(widget.image),
@@ -376,107 +382,113 @@ class _MoreInfoState extends State<MoreInfo> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        Wid_Con.NavigationTo(EditScreen(
-                          imageEdit: widget.image,
-                          nameEdit: widget.name,
-                          numberEdit: widget.phone,
-                          emailEdit: widget.email,
-                          CurrentIndex: widget.CurrentIndex,
-                        ));
-                      },
-                      icon: Image(
-                        image: AssetImage('assets/images/edit.png'),
-                        height: 22,
-                      )),
-                  Text(
-                    'Edit',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        color: themeDarkColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  IconButton(
-                      onPressed: shareContacts,
-                      icon: Image(
-                        image: AssetImage('assets/images/share.png'),
-                        height: 20,
-                      )),
-                  Text(
-                    'Share',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        color: themeDarkColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  PullDownButton(
-                    itemBuilder: (context) => [
-                      PullDownMenuItem(
-                        onTap: () {
-                          Wid_Con.NavigationTo(Ganerate_QR(
-                            name: widget.name,
-                            mobile_number: widget.phone,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Wid_Con.NavigationTo(EditScreen(
+                            imageEdit: widget.image,
+                            nameEdit: widget.name,
+                            numberEdit: widget.phone,
+                            emailEdit: widget.email,
+                            CurrentIndex: widget.CurrentIndex,
                           ));
                         },
-                        title: 'QR code',
-                        icon: CupertinoIcons.qrcode,
-                      ),
-                      // PullDownMenuItem(
-                      //   title: 'Scanner',
-                      //   onTap: () {
-                      //     Wid_Con.NavigationTo(Scanner_qr());
-                      //   },
-                      //   icon: CupertinoIcons.qrcode_viewfinder,
-                      // ),
-                      PullDownMenuItem(
-                        onTap: () {
-                          setState(() {
-                            _deleteItem(widget.index);
-                            Wid_Con.NavigationOffAll(BottomTabbar());
-                          });
-                        },
-                        title: 'Delete',
-                        isDestructive: true,
-                        icon: CupertinoIcons.delete,
-                      ),
-                    ],
-                    routeTheme: PullDownMenuRouteTheme(
-                      backgroundColor: white.withOpacity(0.5),
+                        icon: Image(
+                          image: AssetImage('assets/images/edit.png'),
+                          height: 22,
+                        )),
+                    Text(
+                      'Edit',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          color: themeDarkColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500),
                     ),
-                    buttonBuilder: (context, showMenu) => CupertinoButton(
-                      onPressed: showMenu,
-                      padding: EdgeInsets.zero,
-                      child: Image(
-                        image: AssetImage('assets/images/more.png'),
-                        height: 25,
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: shareContacts,
+                        icon: Image(
+                          image: AssetImage('assets/images/share.png'),
+                          height: 20,
+                        )),
+                    Text(
+                      'Share',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          color: themeDarkColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500),
+
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    PullDownButton(
+                      itemBuilder: (context) => [
+                        PullDownMenuItem(
+                          onTap: () {
+                            Wid_Con.NavigationTo(Ganerate_QR(
+                              name: widget.name,
+                              mobile_number: widget.phone,
+                            ));
+                          },
+                          title: 'QR code',
+                          icon: CupertinoIcons.qrcode,
+                        ),
+                        PullDownMenuItem(
+                          onTap: () {
+                            setState(() {
+                              _deleteItem(widget.index);
+                              Wid_Con.NavigationOffAll(BottomTabbar());
+                            });
+                          },
+                          title: 'Delete',
+                          isDestructive: true,
+                          icon: CupertinoIcons.delete,
+                        ),
+                      ],
+                      routeTheme: PullDownMenuRouteTheme(
+                        backgroundColor: white.withOpacity(0.5),
+                      ),
+                      buttonBuilder: (context, showMenu) => CupertinoButton(
+                        onPressed: showMenu,
+                        padding: EdgeInsets.zero,
+                        child: Image(
+                          image: AssetImage('assets/images/more.png'),
+                          height: 25,
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    'More',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        color: themeDarkColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
+                    Text(
+                      'More',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          color: themeDarkColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -1,4 +1,4 @@
-package com.dn.callerapp
+package com.dn.dialdirectory
 
 import io.flutter.embedding.android.FlutterActivity
 

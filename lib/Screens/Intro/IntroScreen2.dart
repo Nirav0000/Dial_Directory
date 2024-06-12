@@ -5,6 +5,7 @@ import 'package:concentric_transition/page_view.dart';
 import 'package:country_calling_code_picker/country.dart';
 import 'package:country_calling_code_picker/country_code_picker.dart';
 import 'package:country_calling_code_picker/functions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -37,7 +38,7 @@ class _Intro2State extends State<Intro2> {
 
   final pages = [
      PageData(
-      title: "Welcome to the Phonebook",
+      title: "Welcome to the\nDial Directory",
       image: "assets/images/intro_1.png",
       // bdColor: AppColors.backgroundLightBlack,
       bdColor: themeDarkColor,
@@ -200,7 +201,7 @@ class _Intro2State extends State<Intro2> {
             Icons.navigate_next,
             color: themeColor,
             size: screenWidth*0.08,
-          ):CircularProgressIndicator(color: themeColor,),
+          ):CupertinoActivityIndicator(color: themeColor,animating: true,radius: 25,),
         ),
       ),
     );

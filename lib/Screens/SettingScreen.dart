@@ -22,14 +22,10 @@ class _SettingScreenState extends State<SettingScreen> {
       appBar: AppBar(
         backgroundColor: transparent,
         elevation: 0,
-        leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(Icons.arrow_back_ios)),
+
 centerTitle: true,
         title: Text(
-          "Setting",
+          "Settings",
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
               fontFamily: "Montserrat",
@@ -136,7 +132,7 @@ centerTitle: true,
                   onTap: () {
                     FlutterShare.share(
                         linkUrl:
-                        "https://play.google.com/store/apps/details?id=com.dn.callerapp",
+                        "https://play.google.com/store/apps/details?id=com.dn.dialdirectory",
                         title: 'Caller App');
                   },
                   child: Container(
@@ -171,7 +167,7 @@ centerTitle: true,
                   splashColor: themeColor.withOpacity(0.1),
                   highlightColor: white.withOpacity(0.3),
                   onTap: () {
-                    LaunchReview.launch(androidAppId: "com.dn.callerapp");
+                    LaunchReview.launch(androidAppId: "com.dn.dialdirectory");
                   },
                   child: Container(
                     color: Colors.transparent,

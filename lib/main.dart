@@ -12,6 +12,7 @@ import 'Constent/Colors.dart';
 import 'Screens/BottomTabBar.dart';
 import 'Screens/HomeScreen.dart';
 import 'Screens/Intro/IntroScreemn.dart';
+import 'Screens/SplashScreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,14 +21,20 @@ Future<void> main() async {
   await Hive.openBox('GetContacts');
   runApp(
     GetMaterialApp(
-      builder: FToastBuilder(),
+      builder: (context, child) {
+        return MediaQuery(
+          child: child!,
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), // No scaling
+        );
+      },
+      // builder: FToastBuilder(),
       theme: ThemeData(
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.transparent,
         ),
       ),
-      // home: MyHome(),
-      home: storage.read('gotContact')==true? BottomTabbar():Intro2(),
+      home: SecondPage(),
+      // home: ,
       debugShowCheckedModeBanner: false,
     )
   );

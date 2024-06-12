@@ -32,9 +32,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print('---------fev------> ${storage.read('FavriteContacts')}');
     setupDialer();
-    setState(() {
-      _items = storage.read('FavriteContacts')??[];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _items = storage.read('FavriteContacts')??[];
+      });
     });
   }
   Future<void> saveSelectedItems() async {
@@ -178,7 +181,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                       decoration: BoxDecoration(
                                                           color: Colors.grey.shade100,
                                                           borderRadius: BorderRadius.circular(10),
-                                                          image:  currentItem['image']!= null?DecorationImage(
+                                                          image:  currentItem['image']!= null?currentItem['image'].toString().contains('assets/images')?DecorationImage(
+                                                              image:AssetImage(
+                                                                  currentItem['image']),fit: BoxFit.contain):DecorationImage(
                                                               image:MemoryImage(
                                                                   currentItem['image']),fit: BoxFit.cover):DecorationImage(
 

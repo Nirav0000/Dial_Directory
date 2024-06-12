@@ -46,6 +46,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
   DirectDialer? dialer;
   List _filteredContacts = [];
   int isexpan = -1;
+  bool isChangeView = storage.read('selectView')??false;
 
   @override
   void initState() {
@@ -95,8 +96,8 @@ setState(() {
     _deleteItem(e['key']);
   }
 });
-        print('------name-----> ${e['name']}');
-        print('------phone--------> ${e['phone']}');
+        // print('------name-----> ${e['name']}');
+        // print('------phone--------> ${e['phone']}');
       });
       storage.write('totalContacts', _items.length);
     });
@@ -106,8 +107,14 @@ setState(() {
     // final prefs = await SharedPreferences.getInstance();
     // const key = 'selected_items';
     // ignore: prefer_null_aware_operators
-    final value = FevoritsItme.map((item) =>item['phone']!=null? item['phone'].toString():null).join(',');
-    storage.write("FevContacts", value);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        final value = FevoritsItme.map((item) =>item['phone']!=null? item['phone'].toString():null).join(',');
+        storage.write("FevContacts", value);
+        loadSelectedItems();
+      });
+    });
+
     // await prefs.setString(key, value);
   }
 
@@ -115,23 +122,31 @@ setState(() {
     // final prefs = await SharedPreferences.getInstance();
     // const key = 'selected_items';
     // final value = prefs.getString(key) ?? '';
-    final value = storage.read('FevContacts');
-    final list = value.split(',').toList();
-    final selectedList =
-    _filteredContacts.where((item) => list.contains(item['phone'])).toList();
-    log('------------------>$selectedList');
-    setState(() {
-      FevoritsItme = selectedList ?? [];
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          storage.write('FavriteContacts', FevoritsItme);
+
+
+    if(storage.read('FevContacts')!=null){
+      final value = storage.read('FevContacts');
+print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
+      final list = value.split(',').toList();
+      final selectedList =
+      _filteredContacts.where((item) => list.contains(item['phone'])).toList();
+      log('------------------>$selectedList');
+      setState(() {
+        FevoritsItme = selectedList ?? [];
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            storage.write('FavriteContacts', FevoritsItme);
+          });
         });
       });
-    });
+    }
   }
   Future<void> _deleteItem(int itemKey) async {
     await _shoppingBox.delete(itemKey);
     _refreshItems(); // update the UI
+  }
+  bool isNumeric(String str) {
+    return num.tryParse(str) != null;
   }
 
   void _filterContacts(String text) {
@@ -140,16 +155,22 @@ setState(() {
         _filteredContacts = _items;
       });
     } else {
-      setState(() {
-        _filteredContacts = _items
-        // .where((contact) =>
-        //     contact['name'].toLowerCase().contains(text.toLowerCase()))
-        // .toList();
-            .where((contact) =>
-        contact['name'] != null &&
-            contact['name'].toLowerCase().contains(text))
-            .toList();
-      });
+      if(isNumeric(text)==true){
+        setState(() {
+          _filteredContacts = _items
+              .where((contact) =>
+          contact['phone'] != '' &&contact['phone'].toString().replaceAll(' ', '').contains(text))
+              .toList();
+        });
+      }else{
+        setState(() {
+          _filteredContacts = _items
+              .where((contact) =>
+          contact['name'] != null &&contact['name'].toLowerCase().contains(text))
+              .toList();
+        });
+      }
+
     }
   }
 
@@ -209,21 +230,23 @@ setState(() {
                             color: white.withOpacity(0.5),
                             border: Border.all(color: white),
                             borderRadius: BorderRadius.circular(10)),
-                        child: Obx(
-                          () => Center(
+                        child:  Center(
                             child: IconButton(
                                 onPressed: () {
-                                  homeController.changeView();
+
+                                  setState(() {
+                                    isChangeView =! isChangeView;
+                                    storage.write('selectView', isChangeView);
+                                  });
                                 },
                                 icon: Image(
                                   image: AssetImage(
-                                      homeController.isChangeGrid.value == false
+                                      isChangeView == false
                                           ? 'assets/images/grid.png'
                                           : 'assets/images/list.png'),
                                   height: 20,
                                 )),
                           ),
-                        ),
                       ),
                     ),
                     Expanded(
@@ -286,14 +309,13 @@ setState(() {
                     ):Container(),
                   ],
                 ),
-                Obx(
-                  () =>  homeController.isChangeGrid.value == false?
+            isChangeView == false?
                   Expanded(
                     child: MediaQuery.removePadding(
                       context: context,
                       removeTop: true,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(top: 5,bottom: 15),
                         child: _filteredContacts.isEmpty
                             ? Center(
                                 child: SingleChildScrollView(
@@ -407,8 +429,8 @@ setState(() {
                                                           child: BackdropFilter(
                                                             filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                                                             child: Container(
-                                                              height: 70,
-                                                              width: 70,
+                                                              height: 55,
+                                                              width: 55,
                                                               decoration: BoxDecoration(
                                                                   border: Border.all(color: black.withOpacity(0.1)),
                                                                   color: Colors.white.withOpacity(0.1),
@@ -813,7 +835,6 @@ setState(() {
                       ),
                     ),
                   ),
-                ),
                 // widget.combinedList != null ?
                 // Text(widget.combinedList.toString() ?? '') : Container()
               ],

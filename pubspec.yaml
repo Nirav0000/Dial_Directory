@@ -60,6 +60,8 @@ dependencies:
   launch_review: ^3.0.1
   flutter_share: ^2.0.0
   fluttertoast: ^8.2.6
+  animated_text_kit:
+  animations: ^2.0.11
 
 dev_dependencies:
   flutter_test:
