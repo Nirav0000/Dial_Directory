@@ -14,6 +14,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+
 import '../Constent/Colors.dart';
 import '../Controller/GetController.dart';
 import '../Widget/widgets.dart';
@@ -47,6 +48,8 @@ class _Grid_ScreenState extends State<Grid_Screen> {
   List _filteredContacts = [];
   int isexpan = -1;
   bool isChangeView = storage.read('selectView')??false;
+  GlobalKey<AnimatedListState> _key = GlobalKey();
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -56,6 +59,8 @@ class _Grid_ScreenState extends State<Grid_Screen> {
     _refreshItems();
     loadSelectedItems();
   }
+
+
 
 
   Future<void> setupDialer() async => dialer = await DirectDialer.instance;
@@ -280,20 +285,21 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                     isMultiSelectionEnabled==true?
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 18, left: 8, bottom: 8),
+                          top: 20, left: 12, bottom: 8),
                       child: Container(
-                        height: 45,
-                        width: 45,
+                        height: 48,
+                        width: 48,
                         decoration: BoxDecoration(
                             color: white.withOpacity(0.5),
                             border: Border.all(color: white),
-                            borderRadius: BorderRadius.circular(50)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: Center(
                             child: IconButton(
                                 onPressed: () {
                                   selectItems.forEach((e) {
                                     _deleteItem(e['key']);
                                   });
+
                                   setState(() {
                                     isMultiSelectionEnabled=false;
                                   });
@@ -344,74 +350,98 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                         //   thickness: 5,
                         //       thumbVisibility: false,
                         //       child:
-                              GridView.builder(
-                                  controller: widget.controller,
-                                physics: const BouncingScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent:
-                                              /*provider.isDark ? 150 :*/ 200,
-                                          crossAxisSpacing: 15,
-                                          mainAxisExtent: 250,
-                                          mainAxisSpacing: 15),
-                                  itemCount: _filteredContacts.length,
-                                  itemBuilder: (BuildContext context, int i) {
-                                    _filteredContacts.removeWhere((item) =>
-                                        item['name'] == null && item['phone']);
-                                    _filteredContacts.sort((a, b) {
-                                      String nameA = a['name'] ?? '';
-                                      String nameB = b['name'] ?? '';
+                        CupertinoScrollbar(
 
-                                      // If either contact has no name, move it to the end
-                                      if (nameA.isEmpty && nameB.isNotEmpty) {
-                                        return 1;
-                                      } else if (nameA.isNotEmpty &&
-                                          nameB.isEmpty) {
-                                        return -1;
-                                      }
+                          controller: widget.controller,
+                          thickness: 8.0,
+                          thicknessWhileDragging: 10,
+                          // showTrackOnHover: true,
+                          radius: Radius.circular(20),scrollbarOrientation: ScrollbarOrientation.right,
+                          // thumbVisibility: true,
+                          // interactive: true,
+                          // trackVisibility: true,
+                          child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context)
+                                .copyWith(scrollbars: false),
+                            child: GridView.builder(
+                                controller: widget.controller,
+                              physics: const BouncingScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent:
+                                            /*provider.isDark ? 150 :*/ 200,
+                                        crossAxisSpacing: 15,
+                                        mainAxisExtent: 250,
+                                        mainAxisSpacing: 15),
+                                itemCount: _filteredContacts.length,
+                                itemBuilder: (BuildContext context, int i) {
+                                  _filteredContacts.removeWhere((item) =>
+                                      item['name'] == null && item['phone']);
+                                  _filteredContacts.sort((a, b) {
+                                    String nameA = a['name'] ?? '';
+                                    String nameB = b['name'] ?? '';
 
-                                      // Otherwise, sort based on the names
-                                      return nameA.compareTo(nameB);
-                                    });
-                                    final currentItem = _filteredContacts[i];
+                                    // If either contact has no name, move it to the end
+                                    if (nameA.isEmpty && nameB.isNotEmpty) {
+                                      return 1;
+                                    } else if (nameA.isNotEmpty &&
+                                        nameB.isEmpty) {
+                                      return -1;
+                                    }
 
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        doMultiSelection(currentItem);
-                                        print('---------------Select----------> $selectItems');
-                                      },
-                                      onLongPress: (){
-                                        setState(() {
-                                          isMultiSelectionEnabled = true;
-                                        });
-                                        doMultiSelection(currentItem);
-                                        print('---------------Select----------> $selectItems');
-                                      },
-                                      child: Container(
-                                       decoration: BoxDecoration(
-                                         color: white.withOpacity(0.5),
-                                         borderRadius: BorderRadius.circular(10),
-                                         border: Border.all(color: selectItems.contains(currentItem)?themeDarkColor:white),
-                                         boxShadow: [
-// BoxShadow(
-//   color: Colors.grey.shade300,
-//   offset: Offset(1, 1),
-//   spreadRadius: 1,
-//   blurRadius: 10
-// )
-                                         ]
-                                       ),
-                                        child: Stack(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(bottom: 10),
-                                                    child: Stack(
-                                                       alignment: Alignment.bottomCenter,
-                                                      children: [
-                                                        Container(
+                                    // Otherwise, sort based on the names
+                                    return nameA.compareTo(nameB);
+                                  });
+                                  final currentItem = _filteredContacts[i];
+
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      doMultiSelection(currentItem);
+                                      print('---------------Select----------> $selectItems');
+                                    },
+                                    onLongPress: (){
+                                      setState(() {
+                                        isMultiSelectionEnabled = true;
+                                      });
+                                      doMultiSelection(currentItem);
+                                      print('---------------Select----------> $selectItems');
+                                    },
+                                    child: Container(
+                                     decoration: BoxDecoration(
+                                       color: white.withOpacity(0.5),
+                                       borderRadius: BorderRadius.circular(10),
+                                       border: Border.all(color: selectItems.contains(currentItem)?themeDarkColor:white),
+                                       boxShadow: [
+                            // BoxShadow(
+                            //   color: Colors.grey.shade300,
+                            //   offset: Offset(1, 1),
+                            //   spreadRadius: 1,
+                            //   blurRadius: 10
+                            // )
+                                       ]
+                                     ),
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Stack(
+                                                     alignment: Alignment.bottomCenter,
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: isMultiSelectionEnabled==false?() {
+                                                          Wid_Con.NavigationTo( MoreInfo(
+                                                            image: currentItem['image'],
+                                                            name: currentItem['name'],
+                                                            phone: currentItem['phone'],
+                                                            index: currentItem['key'],
+                                                            email: currentItem['email'],
+                                                            CurrentIndex: currentItem,
+                                                          ));
+                                                        }:null,
+                                                        child: Container(
                                                         margin: const EdgeInsets.only(left: 8,right:8,top: 8,bottom: 25),
                                                         decoration: BoxDecoration(
                                                           color: Colors.grey.shade100,
@@ -422,159 +452,162 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                                                                 image:MemoryImage(
                                                                     currentItem['image']),fit: BoxFit.cover):const DecorationImage(
 
-                                      image:AssetImage('assets/images/EmptyImage.png'),fit: BoxFit.cover)),
+                                                                                              image:AssetImage('assets/images/EmptyImage.png'),fit: BoxFit.cover)),
+                                                                                                              ),
                                                       ),
-                                                        ClipRRect(
-                                                          borderRadius: BorderRadius.circular(100),
-                                                          child: BackdropFilter(
-                                                            filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                                                            child: Container(
-                                                              height: 55,
-                                                              width: 55,
-                                                              decoration: BoxDecoration(
-                                                                  border: Border.all(color: black.withOpacity(0.1)),
-                                                                  color: Colors.white.withOpacity(0.1),
-                                                                  borderRadius: BorderRadius.circular(100)
-                                                              ),
-                                                              child: Center(
-                                                                child: Text(
-                                                                  currentItem['name'][0] ??
-                                                                      '',
-                                                                  overflow: TextOverflow
-                                                                      .ellipsis,
-                                                                  style: const TextStyle(
-                                                                      fontFamily:
-                                                                      "Montserrat",
-                                                                      fontSize: 25,
-                                                                      fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                                ),
+                                                      ClipRRect(
+                                                        borderRadius: BorderRadius.circular(100),
+                                                        child: BackdropFilter(
+                                                          filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(color: black.withOpacity(0.1)),
+                                                                color: Colors.white.withOpacity(0.1),
+                                                                borderRadius: BorderRadius.circular(100)
+                                                            ),
+                                                            child: Center(
+                                                              child: Text(
+                                                                currentItem['name'][0] ??
+                                                                    '',
+                                                                overflow: TextOverflow
+                                                                    .ellipsis,
+                                                                style: const TextStyle(
+                                                                    fontFamily:
+                                                                    "Montserrat",
+                                                                    fontSize: 25,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
                                                               ),
                                                             ),
                                                           ),
-                                                        )
-                                                      ],
-                                                    ),
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 ),
-                                                Container(
+                                              ),
+                                              Container(
 
-                                                    width: width / 2,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          currentItem['name'] ??
-                                                              '',
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: const TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                        Text(
-                                                          currentItem['phone'] ??
-                                                              '',
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              color: grey,
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets.symmetric(vertical: 10),
-                                                          child: Container(
-                                                            // color: grey,
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                              children: [
-                                                              InkWell(
+                                                  width: width / 2,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        currentItem['name'] ??
+                                                            '',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                                "Montserrat",
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Text(
+                                                        currentItem['phone'] ??
+                                                            '',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "Montserrat",
+                                                            color: grey,
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                                        child: Container(
+                                                          // color: grey,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                            children: [
+                                                            InkWell(
+                                                              splashColor: transparent,
+                                                                hoverColor: transparent,
+                                                                 onTap: () {
+                                                                   setState(() {
+                                                                     // provider.toggleFavorite(currentItem);
+                                                                     if (FevoritsItme.contains(
+                                                                         currentItem)) {
+                                                                       FevoritsItme.remove(
+                                                                           currentItem);
+                                                                     } else {
+                                                                       FevoritsItme.add(
+                                                                           currentItem);
+                                                                     }
+                                                                     saveSelectedItems();
+                                                                   });
+                                                                 },
+                                                                child: Image(
+                                                                  image: AssetImage(FevoritsItme.contains(currentItem)?
+                                                                  'assets/images/fevorit_nonfill.png':
+                                                                  'assets/images/Fevorit.png'),
+                                                                  height: 22,)),
+                                                            InkWell(
                                                                 splashColor: transparent,
-                                                                  hoverColor: transparent,
-                                                                   onTap: () {
-                                                                     setState(() {
-                                                                       // provider.toggleFavorite(currentItem);
-                                                                       if (FevoritsItme.contains(
-                                                                           currentItem)) {
-                                                                         FevoritsItme.remove(
-                                                                             currentItem);
-                                                                       } else {
-                                                                         FevoritsItme.add(
-                                                                             currentItem);
-                                                                       }
-                                                                       saveSelectedItems();
-                                                                     });
-                                                                   },
-                                                                  child: Image(
-                                                                    image: AssetImage(FevoritsItme.contains(currentItem)?
-                                                                    'assets/images/fevorit_nonfill.png':
-                                                                    'assets/images/Fevorit.png'),
-                                                                    height: 22,)),
-                                                              InkWell(
-                                                                  splashColor: transparent,
-                                                                  hoverColor: transparent,
-                                                                onTap: () async {
-                                                                  await dialer?.dial(currentItem['phone']);
-                                                                },
-                                                                  child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
-                                                              InkWell(
+                                                                hoverColor: transparent,
+                                                              onTap: () async {
+                                                                await dialer?.dial(currentItem['phone']);
+                                                              },
+                                                                child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 23,)),
+                                                            InkWell(
+                                                              splashColor: transparent,
+                                                              hoverColor: transparent,
+                                                              onTap: () {
+                                                                if(currentItem['phone']!=''){
+                                                                  launchUrl(Uri.parse("sms:${currentItem['phone']}"));
+                                                                }
+
+                                                              },
+                                                                child: const Image(image: AssetImage('assets/images/message.png'),height: 24,)),
+                                                            InkWell(
                                                                 splashColor: transparent,
                                                                 hoverColor: transparent,
                                                                 onTap: () {
-                                                                  if(currentItem['phone']!=''){
-                                                                    launchUrl(Uri.parse("sms:${currentItem['phone']}"));
-                                                                  }
+                                                                  setState(() {
+                                                                    // _deleteItem(currentItem['key']);
+                                                                    Wid_Con.NavigationTo( MoreInfo(
+                                                                      image: currentItem['image'],
+                                                                      name: currentItem['name'],
+                                                                      phone: currentItem['phone'],
+                                                                      index: currentItem['key'],
+                                                                      email: currentItem['email'],
+                                                                      CurrentIndex: currentItem,
+                                                                    ));
+                                                                  });
 
                                                                 },
-                                                                  child: const Image(image: AssetImage('assets/images/message.png'),height: 25,)),
-                                                              InkWell(
-                                                                  splashColor: transparent,
-                                                                  hoverColor: transparent,
-                                                                  onTap: () {
-                                                                    setState(() {
-                                                                      // _deleteItem(currentItem['key']);
-                                                                      Wid_Con.NavigationTo( MoreInfo(
-                                                                        image: currentItem['image'],
-                                                                        name: currentItem['name'],
-                                                                        phone: currentItem['phone'],
-                                                                        index: currentItem['key'],
-                                                                        email: currentItem['email'],
-                                                                        CurrentIndex: currentItem,
-                                                                      ));
-                                                                    });
-
-                                                                  },
-                                                                  child: Container(
-                                                                    height: 25,
-                                                                      width: 25,
-                                                                      // color: grey,
-                                                                      child: const Image(image: AssetImage('assets/images/more.png'),))),
-                                                              ],
-                                                            ),
+                                                                child: Container(
+                                                                  height: 25,
+                                                                    width: 25,
+                                                                    // color: grey,
+                                                                    child: const Image(image: AssetImage('assets/images/more.png'),))),
+                                                            ],
                                                           ),
-                                                        )
-                                                      ],
-                                                    )),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  },
-                                ),
+                                    ),
+                                  );
+                                },
+                              ),
+                          ),
+                        ),
                             // ),
                       ),
                     ),
@@ -602,7 +635,6 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                                       fontWeight: FontWeight.w500,
                                       color: grey),
                                 ),
-
                               ],
                             ),
                           ),
@@ -613,8 +645,10 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                         //       thumbVisibility: false,
                         //       child:
                         ListView.builder(
-                          controller: widget.controller,
+key: _key,
                           itemCount: _filteredContacts.length,
+                          controller: widget.controller,
+                          // itemCount: _filteredContacts.length,
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (BuildContext context, int i) {
                             _filteredContacts.removeWhere((item) =>
@@ -637,7 +671,14 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                             final currentItem = _filteredContacts[i];
 
                             return GestureDetector(
-                              onTap: () async {
+                              onLongPress: (){
+                                setState(() {
+                                  isMultiSelectionEnabled = true;
+                                });
+                                doMultiSelection(currentItem);
+                                print('---------------Select----------> $selectItems');
+                              },
+                              onTap:isMultiSelectionEnabled == false? () async {
                                 setState(() {
 
                                   _selectedIndex = i;
@@ -649,13 +690,15 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                                   });
                                 });
                                 // await dialer?.dial(currentItem['phone']);
+                              }:(){
+                                doMultiSelection(currentItem);
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
                                     color: white.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: white),
+                                  border: Border.all(color: selectItems.contains(currentItem)?themeDarkColor:white),
 
                                 ),
                                 child: Stack(
@@ -676,20 +719,56 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                                               children: [
                                                 currentItem['image']!= null?
                                                 currentItem['image'].toString().contains('assets/images')?
-                                                CircleAvatar(
-                                                  backgroundColor: white,
-                                                  radius: 25,
-                                                  backgroundImage: AssetImage(currentItem['image']),
+                                                InkWell(
+                                                  onTap:isMultiSelectionEnabled==false? () {
+                                                    Wid_Con.NavigationTo( MoreInfo(
+                                                      image: currentItem['image'],
+                                                      name: currentItem['name'],
+                                                      phone: currentItem['phone'],
+                                                      index: currentItem['key'],
+                                                      email: currentItem['email'],
+                                                      CurrentIndex: currentItem,
+                                                    ));
+                                                  }:null,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: white,
+                                                    radius: 25,
+                                                    backgroundImage: AssetImage(currentItem['image']),
+                                                  ),
                                                 ):
-                                                CircleAvatar(
-                                                  backgroundColor: white,
+                                                InkWell(
+                                                  onTap:isMultiSelectionEnabled==false? () {
+                                                    Wid_Con.NavigationTo( MoreInfo(
+                                                      image: currentItem['image'],
+                                                      name: currentItem['name'],
+                                                      phone: currentItem['phone'],
+                                                      index: currentItem['key'],
+                                                      email: currentItem['email'],
+                                                      CurrentIndex: currentItem,
+                                                    ));
+                                                  }:null,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: white,
+                                                    radius: 25,
+                                                    backgroundImage: MemoryImage(currentItem['image']),
+                                                  ),
+                                                ): InkWell(
+                                                  onTap: isMultiSelectionEnabled==false?() {
+                                                    Wid_Con.NavigationTo( MoreInfo(
+                                                      image: currentItem['image'],
+                                                      name: currentItem['name'],
+                                                      phone: currentItem['phone'],
+                                                      index: currentItem['key'],
+                                                      email: currentItem['email'],
+                                                      CurrentIndex: currentItem,
+                                                    ));
+                                                  }:null,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: white,
                                                   radius: 25,
-                                                  backgroundImage: MemoryImage(currentItem['image']),
-                                                ): CircleAvatar(
-                                                  backgroundColor: white,
-                                                radius: 25,
-                                                                          backgroundImage: AssetImage('assets/images/EmptyImage.png'),
-                                                                          ),
+                                                                            backgroundImage: AssetImage('assets/images/EmptyImage.png'),
+                                                                            ),
+                                                ),
                                                 Expanded(
                                                   child: Padding(
                                                     padding: const EdgeInsets.only(left: 10,top: 5),
@@ -762,7 +841,7 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                                                                         height: 22,)),
                                                                 ),
                                                                 AnimatedContainer(
-                                                                  height: isexpan == i?20:0,
+                                                                  height: isexpan == i?22:0,
                                                                   duration: Duration(milliseconds: 300),
                                                                   child: InkWell(
                                                                       splashColor: transparent,
@@ -770,7 +849,7 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                                                                       onTap: () async {
                                                                         await dialer?.dial(currentItem['phone']);
                                                                       },
-                                                                      child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 22,)),
+                                                                      child: const Image(image: AssetImage('assets/images/call_icon.png'),height: 25,)),
                                                                 ),
                                                                 AnimatedContainer(
                                                                   height: isexpan == i?23:0,

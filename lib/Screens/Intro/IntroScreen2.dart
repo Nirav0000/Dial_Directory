@@ -163,13 +163,6 @@ class _Intro2State extends State<Intro2> {
     // initCountry();
   }
 
-  // void initCountry() async {
-  //   final country = await getDefaultCountry(context);
-  //   setState(() {
-  //     _selectedCountry = country;
-  //   });
-  // }
-
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +189,7 @@ class _Intro2State extends State<Intro2> {
         radius: screenWidth*0.1,
         duration: Duration(milliseconds: 1000),
         nextButtonBuilder: (context)=>Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(0.0),
           child:isload == false?Icon(
             Icons.navigate_next,
             color: themeColor,
@@ -217,8 +210,9 @@ class _Page  extends StatelessWidget{
     final screenWidth = MediaQuery.of(context).size.width;
     space(double p)=>SizedBox(height: screenWidth*p/100);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        space(45),
+        // Spacer(),
         Container(
           decoration: BoxDecoration(
             color: page.bdColor,
@@ -253,7 +247,7 @@ class _Page  extends StatelessWidget{
                 height: 1
             )
         ),
-        space(50),
+        space(30),
       ],
     );
   }

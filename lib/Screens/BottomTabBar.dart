@@ -83,7 +83,7 @@ class _BottomTabbarState extends State<BottomTabbar>
                 context: context,
                 constraints: BoxConstraints.loose(Size(
                     MediaQuery.of(context).size.width,
-                  MediaQuery.of(context).size.height * 0.85,)),
+                  680)),
                 isScrollControlled: true,
                 builder: (BuildContext context) {
                   return  KeyPadSheet(dialer: dialer,);

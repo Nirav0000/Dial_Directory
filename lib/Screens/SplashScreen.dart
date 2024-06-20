@@ -60,12 +60,12 @@ import 'Intro/IntroScreen2.dart';
 // }
 
 
-class SecondPage extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  SecondPageState createState() => SecondPageState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class SecondPageState extends State<SecondPage> {
+class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();

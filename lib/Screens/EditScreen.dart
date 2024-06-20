@@ -77,11 +77,15 @@ class _EditScreenState extends State<EditScreen> {
     "assets/images/avatar/29.png",
     "assets/images/avatar/30.png",
   ];
+  bool isNumeric(String str) {
+    return num.tryParse(str) != null;
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    print('------------------------------------edit--------------------> ${isNumeric('123')}');
     if (widget.NewNumber != null) {
       numberController.text = widget.NewNumber.toString();
     } else {
@@ -90,6 +94,9 @@ class _EditScreenState extends State<EditScreen> {
       emailController.text =
           widget.emailEdit != null ? widget.emailEdit.toString() : '';
       newImage = widget.imageEdit;
+      if(isNumeric(nameController.text)==true){
+        nameController.clear();
+      }
     }
     print('--------scan----> ${numberController.text}');
   }

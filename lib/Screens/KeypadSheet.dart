@@ -95,7 +95,7 @@ class _KeyPadSheetState extends State<KeyPadSheet> {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        height: ContectController.text.isNotEmpty?MediaQuery.of(context).size.height * 0.78:MediaQuery.of(context).size.height * 0.706,
+        height: ContectController.text.isNotEmpty?665:600,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
