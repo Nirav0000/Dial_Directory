@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:animations/animations.dart';
+import 'package:caller_app/Widget/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:async';
-
+import 'package:http/http.dart' as http;
 import '../Constent/Colors.dart';
 import 'BottomTabBar.dart';
 import 'Intro/IntroScreen2.dart';
+import 'UpdateScreen.dart';
 
 // class MyCustomWidget extends StatefulWidget {
 //   @override
@@ -97,13 +104,12 @@ class SplashScreenState extends State<SplashScreen> {
     });
     Timer(Duration(milliseconds: 3000), () {
       setState(() {
-        Navigator.of(context).pushReplacement(
-          ThisIsFadeRoute(
-            route: storage.read('gotContact')==true? BottomTabbar():Intro2(),
-          ),
-        );
+        getappversion();
+
       });
     });
+
+
   }
 
   bool _a = false;
@@ -111,11 +117,64 @@ class SplashScreenState extends State<SplashScreen> {
   bool _c = false;
   bool _d = false;
   bool _e = false;
+  int? app_version_api;
 
   @override
   void dispose() {
     super.dispose();
   }
+
+
+
+  Future<void> getappversion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    // Map<String, dynamic> map1 = {
+    //   'fn': 'getAppVersion'
+    // };
+    var response = await http
+        .get(Uri.parse("https://www.dninfotechin.com/api/app-version"));
+    final appversionAPI = json.decode(response.body);
+
+    String build_version = packageInfo.version;
+    int build_number = int.parse(packageInfo.buildNumber);
+    print('Response...................................................: ${appversionAPI['dialDirectory']['version']}');
+    print(
+        'build_number...................................................: ${build_number}');
+
+    // appversion = Appversion.fromJson(res);
+
+    // setState(() {
+    app_version_api = int.parse(appversionAPI['dialDirectory']['version'].toString());
+
+    // splashscreen.preferences!.setString("app_version", app_version);
+    print(
+        'app_version............................................ ${app_version_api}');
+    // });
+
+    if (build_number < 2/*app_version_api!*/) {
+      // ignore: use_build_context_synchronously
+      // Wid_Con.NavigationOff(const UpdateScreen());
+      Navigator.of(context).pushReplacement(
+        ThisIsFadeRoute(
+          route: UpdateScreen(isrequire: appversionAPI['dialDirectory']['isRequiredUpdate'],),
+        ),
+      );
+      // Navigator.pushReplacement<void, void>(
+      //   context,
+      //   MaterialPageRoute<void>(
+      //     builder: (BuildContext context) => UpdateScreen(),
+      //   ),
+      // );
+    } else {
+      Navigator.of(context).pushReplacement(
+        ThisIsFadeRoute(
+          route: storage.read('gotContact')==true? BottomTabbar():Intro2(),
+        ),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
