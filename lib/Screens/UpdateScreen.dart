@@ -5,6 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'BottomTabBar.dart';
+import 'Intro/IntroScreen2.dart';
+import 'SplashScreen.dart';
+
 
 
 class UpdateScreen extends StatefulWidget {
@@ -29,7 +33,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
             margin: EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               color: themeColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(20)
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -50,7 +54,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   ),),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 60),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color?>(moreinfobg),
@@ -69,7 +73,29 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             fontWeight: FontWeight.bold,
                             color: Color(0xFFFFFFFF)),
                       )),
-                )
+                ),
+widget.isrequire==true?
+                InkWell(
+                  hoverColor: transparent,
+                  splashColor: transparent,
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      ThisIsFadeRoute(
+                        route: storage.read('gotContact')==true? BottomTabbar():Intro2(),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Text('Not Now',style: TextStyle(
+                      color: themeDarkColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.underline
+                    ),),
+                  ),
+                ):Container(
+  margin: const EdgeInsets.only(bottom: 20),
+)
               ],
             ),
                     ),

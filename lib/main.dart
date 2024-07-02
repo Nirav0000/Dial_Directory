@@ -3,6 +3,7 @@ import 'package:caller_app/testScreen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +15,9 @@ import 'Screens/BottomTabBar.dart';
 import 'Screens/HomeScreen.dart';
 import 'Screens/Intro/IntroScreemn.dart';
 import 'Screens/SplashScreen.dart';
+
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,4 +47,8 @@ Future<void> main() async {
       ),
     // )
   );
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 }

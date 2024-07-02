@@ -52,7 +52,7 @@ centerTitle: true,
                 splashColor: themeColor.withOpacity(0.1),
                 highlightColor: white.withOpacity(0.3),
                 onTap: () async {
-                  await launchUrl(Uri.parse('https://www.termsfeed.com/live/00338b35-f819-4e3f-b4a0-9875b48fb30a'));
+                  await launchUrl(Uri.parse('https://www.termsfeed.com/live/f9805160-fc5b-425a-8c37-9889ec39dd1c'));
                 },
                 child: Container(
                   color: transparent,
@@ -216,7 +216,7 @@ centerTitle: true,
                                     fontWeight: FontWeight.w500),
                               ),
                               Text(
-                                "Version: 1.1.1",
+                                "Version: 1.0.1",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: "Montserrat",

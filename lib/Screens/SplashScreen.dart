@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:animations/animations.dart';
 import 'package:caller_app/Widget/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -13,58 +15,6 @@ import '../Constent/Colors.dart';
 import 'BottomTabBar.dart';
 import 'Intro/IntroScreen2.dart';
 import 'UpdateScreen.dart';
-
-// class MyCustomWidget extends StatefulWidget {
-//   @override
-//   MyCustomWidgetState createState() => MyCustomWidgetState();
-// }
-//
-// class MyCustomWidgetState extends State<MyCustomWidget> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//           children: [
-//             Text(
-//               'Suppose this is an app in your Phone\'s Screen page.',
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                 fontSize: 17,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//             OpenContainer(
-//               closedBuilder: (_, openContainer) {
-//                 return Container(
-//                   height: 80,
-//                   width: 80,
-//                   child: Center(
-//                     child: Text(
-//                       'App Logo',
-//                       style: TextStyle(
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//               openColor: Colors.white,
-//               closedElevation: 20,
-//               closedShape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(20)),
-//               transitionDuration: Duration(milliseconds: 700),
-//               openBuilder: (_, closeContainer) {
-//                 return SecondPage();
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 
 class SplashScreen extends StatefulWidget {
@@ -76,7 +26,7 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
+    getConnectivity();
     Timer(Duration(milliseconds: 400), () {
       setState(() {
         _a = true;
@@ -118,11 +68,83 @@ class SplashScreenState extends State<SplashScreen> {
   bool _d = false;
   bool _e = false;
   int? app_version_api;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+  var internetchecker = InternetConnectionChecker();
 
   @override
   void dispose() {
     super.dispose();
   }
+
+  getConnectivity() {
+
+    internetchecker.onStatusChange.listen((status) {
+
+      switch (status){
+        case InternetConnectionStatus.disconnected:
+          showDialogBox();
+          break;
+        case InternetConnectionStatus.connected:
+
+        // getBusiness(userid: Userid);
+        // if (widget.islast != true) {
+        //   getCategory();
+        // }
+          break;
+      }
+    });
+
+    // print('----------------> 2');
+    // subscription = Connectivity().onConnectivityChanged.listen(
+    //   (ConnectivityResultresult) async {
+    //     isDeviceConnected = await InternetConnectionChecker().hasConnection;
+    //     print('----------------> 3');
+    //     if (!isDeviceConnected && isAlertSet == false) {
+    //       print('-----Connection OFF-----------> ');
+    //       showDialogBox();
+    //       setState(() => isAlertSet = true);
+    //     } else {
+    //       print('-----Connection ON-----------> ');
+    //       getBusiness(userid: Userid);
+    //     }
+    //   },
+    // );
+  }
+
+  showDialogBox() => showCupertinoDialog<String>(
+    // barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      title: const Text('No Connection'),
+      content: const Text('Please check your internet connection!'),
+      actions: <Widget>[
+        TextButton(
+          style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all<Color>(grey)),
+          onPressed: () async {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>  SplashScreen()));
+            setState(() => isAlertSet = false);
+            isDeviceConnected =
+            await InternetConnectionChecker().hasConnection;
+            if (!isDeviceConnected && isAlertSet == false) {
+              showDialogBox();
+              setState(() => isAlertSet = true);
+            } else {
+              getappversion();
+            }
+          },
+          child: Text(
+            'OK',
+            style: TextStyle(color: black),
+          ),
+        ),
+      ],
+    ),
+  );
 
 
 
@@ -152,24 +174,19 @@ class SplashScreenState extends State<SplashScreen> {
         'app_version............................................ ${app_version_api}');
     // });
 
-    if (build_number < 2/*app_version_api!*/) {
+    if (build_number == app_version_api!) {
       // ignore: use_build_context_synchronously
       // Wid_Con.NavigationOff(const UpdateScreen());
       Navigator.of(context).pushReplacement(
         ThisIsFadeRoute(
-          route: UpdateScreen(isrequire: appversionAPI['dialDirectory']['isRequiredUpdate'],),
+          route: storage.read('gotContact')==true? BottomTabbar():Intro2(),
         ),
       );
-      // Navigator.pushReplacement<void, void>(
-      //   context,
-      //   MaterialPageRoute<void>(
-      //     builder: (BuildContext context) => UpdateScreen(),
-      //   ),
-      // );
+
     } else {
       Navigator.of(context).pushReplacement(
         ThisIsFadeRoute(
-          route: storage.read('gotContact')==true? BottomTabbar():Intro2(),
+          route: UpdateScreen(isrequire: appversionAPI['dialDirectory']['isRequiredUpdate'],),
         ),
       );
     }
