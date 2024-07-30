@@ -203,7 +203,7 @@ class _Intro2State extends State<Intro2> {
 
 class _Page  extends StatelessWidget{
   final PageData page;
-  const _Page({super.key, required this.page});
+  const _Page({required this.page});
 
   @override
   Widget build(BuildContext context) {

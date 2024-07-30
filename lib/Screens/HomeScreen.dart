@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 import 'package:direct_dialer/direct_dialer.dart';

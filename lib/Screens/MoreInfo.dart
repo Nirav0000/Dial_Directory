@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:direct_dialer/direct_dialer.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +18,6 @@ import '../Widget/widgets.dart';
 import 'BottomTabBar.dart';
 import 'EditScreen.dart';
 import 'QR_detail/Ganerate_QR.dart';
-import 'QR_detail/Scanner_qr.dart';
 
 class MoreInfo extends StatefulWidget {
   MoreInfo({super.key, this.image, this.name, this.phone, this.index, this.CurrentIndex, this.email});

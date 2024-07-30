@@ -67,7 +67,7 @@ dependencies:
   package_info_plus:
   internet_connection_checker: ^1.0.0+1
   connectivity_plus:
-
+  http: any
 
 
 dev_dependencies:
