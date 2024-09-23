@@ -174,7 +174,7 @@ class SplashScreenState extends State<SplashScreen> {
         'app_version............................................ ${app_version_api}');
     // });
 
-    if (build_number == app_version_api!) {
+    if (build_number >= app_version_api!) {
       // ignore: use_build_context_synchronously
       // Wid_Con.NavigationOff(const UpdateScreen());
       Navigator.of(context).pushReplacement(
@@ -248,7 +248,6 @@ class SplashScreenState extends State<SplashScreen> {
                           Container(
                             height: 100,
                             width: 100,
-
                             margin: EdgeInsets.only(bottom: 10),
                             decoration: BoxDecoration(
                               color: transparent,
