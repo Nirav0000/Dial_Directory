@@ -68,6 +68,7 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   connectivity_plus:
   http: any
+  google_mobile_ads: ^5.0.0
 
 
 dev_dependencies:

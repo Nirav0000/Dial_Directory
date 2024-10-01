@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'Screens/SplashScreen.dart';
 
 
@@ -17,6 +17,7 @@ import 'Screens/SplashScreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize();
   await GetStorage.init();
   await Hive.initFlutter();
   await Hive.openBox('GetContacts');

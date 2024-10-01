@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,6 +50,7 @@ class _Grid_ScreenState extends State<Grid_Screen> {
   bool isChangeView = storage.read('selectView')??false;
   GlobalKey<AnimatedListState> _key = GlobalKey();
   ScrollController _scrollController = ScrollController();
+  InterstitialAd? interstitialAd;
 
   @override
   void initState() {
@@ -59,7 +61,18 @@ class _Grid_ScreenState extends State<Grid_Screen> {
     loadSelectedItems();
   }
 
-
+  Future<void> InterstitialAD() async {
+    await InterstitialAd.load(
+        adUnitId: 'ca-app-pub-5175616370870793/7351236434',
+        request: AdRequest(),
+        adLoadCallback:
+        InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
+          interstitialAd = ad;
+          interstitialAd?.show();
+        }, onAdFailedToLoad: (LoadAdError loadError) {
+          print("InterstitialAd failed to load : $loadError");
+        }));
+  }
 
 
   Future<void> setupDialer() async => dialer = await DirectDialer.instance;
@@ -237,7 +250,7 @@ print('-------dzsfdgvzs------> ${storage.read('FevContacts')}');
                         child:  Center(
                             child: IconButton(
                                 onPressed: () {
-
+                                  InterstitialAD();
                                   setState(() {
                                     isChangeView =! isChangeView;
                                     storage.write('selectView', isChangeView);

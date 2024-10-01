@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:caller_app/Constent/Colors.dart';
 import 'package:direct_dialer/direct_dialer.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../Bottom_bar/BottomBar.dart';
 import 'FavoriteScreen.dart';
@@ -35,6 +38,9 @@ class _BottomTabbarState extends State<BottomTabbar>
   ];
   DirectDialer? dialer;
   Future<void> setupDialer() async => dialer = await DirectDialer.instance;
+  InterstitialAd? interstitialAd;
+
+
   @override
   void initState() {
     currentPage = 0;
@@ -47,7 +53,23 @@ class _BottomTabbarState extends State<BottomTabbar>
         }
       },
     );
+    Timer(Duration(seconds: 15,), () {
+      InterstitialAD();
+    });
     super.initState();
+  }
+
+  Future<void> InterstitialAD() async {
+   await InterstitialAd.load(
+        adUnitId: 'ca-app-pub-5175616370870793/7351236434',
+        request: AdRequest(),
+        adLoadCallback:
+        InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
+          interstitialAd = ad;
+          interstitialAd?.show();
+        }, onAdFailedToLoad: (LoadAdError loadError) {
+          print("InterstitialAd failed to load : $loadError");
+        }));
   }
 
   void changePage(int newPage) {
